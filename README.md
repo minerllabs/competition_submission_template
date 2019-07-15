@@ -2,6 +2,8 @@
 
 # NeurIPS 2019 : MineRL Challenge Starter Kit
 
+[![Discourse status](https://img.shields.io/discourse/https/discourse.aicrowd.com/status.svg)](https://discourse.aicrowd.com/) [![Discord](https://img.shields.io/discord/565639094860775436.svg)](https://discord.gg/BT9uegr)
+
 Instructions to make submissions to the [NeurIPS 2019 : MineRL Challenge](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition).
 
 Participants will have to submit their code, with packaging specifications, and the evaluator will automatically build a docker image and execute their code against a series of secret datasets.
