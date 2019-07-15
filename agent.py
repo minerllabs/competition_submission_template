@@ -3,6 +3,7 @@ import json
 import select
 import time
 import logging
+import os
 
 import gym
 import matplotlib.pyplot as plt
