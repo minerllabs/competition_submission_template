@@ -19,7 +19,7 @@ coloredlogs.install(logging.DEBUG)
 #minerl.env.bootstrap._check_port_avail = lambda _,__: True
 
 NUM_EPISODES = int(os.getenv('MINERL_NUM_EPISODES', 1))
-MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLNavigateDense-v0')
+MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamond-v0')
 
 def main():
     """
