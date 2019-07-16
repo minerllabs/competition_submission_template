@@ -34,9 +34,9 @@ def main():
         done = False
         netr = 0
         while not done:
-            random_act = env.action_space.noop()
-
-            random_act['camera'] = [0, 0.1*obs["compassAngle"]]
+            random_act = env.action_space.sample()
+            
+            random_act['camera'] = [0,0]
             random_act['back'] = 0
             random_act['forward'] = 1
             random_act['jump'] = 1
@@ -44,7 +44,6 @@ def main():
             # print(random_act)
             obs, reward, done, info = env.step(
                 random_act)
-            # print(obs["compassAngle"])
             netr += reward
             print(reward, netr)
             env.render()
