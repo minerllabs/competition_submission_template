@@ -21,6 +21,8 @@ SUBMISSION_TIMEOUT = int(os.getenv('SUBMISSION_TIMEOUT', 24*60*60))
 NO_NEW_ENTRY_POLL_TIMEOUT = int(os.getenv('NO_NEW_ENTRY_POLL_TIMEOUT', 180))
 # Where to look if submission has finished
 EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
+# All the evaluations will be allowed to run only below gym environment
+MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamond-v0')
 
 line_count=0
 start_time = time.time()
@@ -73,6 +75,14 @@ class AICrowdSubContractor:
         payload['episodes'] = []
         score = 0.00
 
+        global MINERL_GYM_ENV
+        if payload['currentEnvironment'] != MINERL_GYM_ENV:
+            self.finished = True
+            payload['state'] = 'ERROR'
+            payload['reason'] = 'Wrong environment used, you should use "%s" instead of "%s"' \
+                                % (MINERL_GYM_ENV, payload['currentEnvironment'])
+            raise Exception(payload['reason'])
+
         for episode in range(payload['totalNumberEpisodes'] + 1):
             # 000000-MineRLObtainDiamond-v0.json
             episode_file = PERFORMANCE_DIRECTORY + str(episode).zfill(6) + '-' + payload['currentEnvironment'] + '.json'
@@ -88,7 +98,7 @@ class AICrowdSubContractor:
                 payload['episodes'].append(episode_info)
             elif finished and not found and payload['state'] == 'IN_PROGRESS' and episode == payload['totalNumberEpisodes']:
                 # One missing is expected in proper finish.
-                print('FInished on episode: %s', episode)
+                print('Finished on episode: %s', episode)
                 payload['state'] = 'FINISHED'
                 payload['score'] = {
                     "score": score,
@@ -165,7 +175,10 @@ if __name__ == '__main__':
         if not updated:
             time_since_last_update = time.time() - last_successful_update_time
             if time_since_last_update > NO_NEW_ENTRY_POLL_TIMEOUT:
-                raise Exception("Submission update polling timed out (no new update was written in {lsp}s) exceeded poll timeout({timeout}s)".format(lsp=time_since_last_update, timeout=NO_NEW_ENTRY_POLL_TIMEOUT))
+                print("PARSER: Submission update polling timed out (no new update was written in {lsp}s) exceeded poll timeout({timeout}s)".format(lsp=time_since_last_update, timeout=NO_NEW_ENTRY_POLL_TIMEOUT))
+                subcontractor.update_status()
+                subcontractor.update_status(finished=True)
+                break
         else:
             last_successful_update_time = time.time()
 
