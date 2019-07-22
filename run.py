@@ -22,7 +22,10 @@ if EVALUATION_STAGE in ['all', 'training']:
 # Testing Phase
 if EVALUATION_STAGE in ['all', 'testing']:
     if EVALUATION_RUNNING_ON in ['local']:
-        os.remove(EXITED_SIGNAL_PATH)
+        try:
+            os.remove(EXITED_SIGNAL_PATH)
+        except FileNotFoundError:
+            pass
     aicrowd_helper.inference_start()
     try:
         test.main()

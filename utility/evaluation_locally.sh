@@ -12,6 +12,7 @@ MANAGER_PID=$!
 sleep 2
 export MINERL_INSTANCE_MANAGER_REMOTE="1"
 export EVALUATION_STAGE='testing'
+export EVALUATION_RUNNING_ON='local'
 export EXITED_SIGNAL_PATH='shared/exited'
 python3 run.py & > /dev/null 2>&1
 SUBMISSION_PID=$!
