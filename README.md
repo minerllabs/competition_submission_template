@@ -41,7 +41,7 @@ To get started with the environment and dataset [please check out our quick star
 
 This competition uses a set of Gym environments based on [Malmo](https://github.com/Microsoft/malmo). The environment and dataset loader will be available through a pip package.
 
-The main task of the competition is solving the `ObtainDiamond` environment. In this environment, the agent begins in a random starting location without any items, and is tasked with obtaining a diamond. This task can only be accomplished by navigating the complex item hierarchy of Minecraft.
+The main task of the competition is solving the `MineRLObtainDiamond-v0` environment. In this environment, the agent begins in a random starting location without any items, and is tasked with obtaining a diamond. This task can only be accomplished by navigating the complex item hierarchy of Minecraft.
 
 
 # How do I specify my software runtime ?
@@ -59,8 +59,28 @@ This `environment.yml` file will be used to recreate the `conda environment`. Th
 
 # What should my code structure be like ?
 
-Please follow the structure documented in the included [agent.py](https://github.com/AIcrowd/neurips2019_minerl_challenge_starter_kit/blob/master/agent.py) to adapt
-the required structure for this round.
+Please follow the example structure shared in the starter kit for the code structure.
+The different files and directories have following meaning:
+
+```
+.
+├── aicrowd.json           # Submission meta information like your username
+├── apt.txt                # Packages to be installed inside docker image
+├── data                   # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
+├── requirements.txt       # Python packages to be installed
+├── run.sh                 # The default entry point which will execute your submission
+├── test.py                # IMPORTANT: Your testing/inference phase code
+├── train                  # Your trained model can be saved inside this directory
+├── train.py               # IMPORTANT: Your training phase code
+└── utility                # The utility scripts to provide smoother experience to you.
+    ├── debug_build.sh
+    ├── docker_run.sh
+    ├── environ.sh
+    ├── evaluation_locally.sh
+    ├── parser.py
+    ├── train_locally.sh
+    └── verify_or_download_data.sh
+```
 
 ## Important Concepts
 
@@ -106,6 +126,64 @@ conda env export --no-build > environment.yml
 
 The evaluator will use `/home/aicrowd/run.sh` as the entrypoint, so please remember to have a `run.sh` at the root, which can instantitate any necessary environment variables, and also start executing your actual code. This repository includes a sample `run.sh` file.
 If you are using a Dockerfile to specify your software environment, please remember to create a `aicrowd` user, and place the entrypoint code at `run.sh`.
+
+The `run.sh` in turn calls your training and testing code present in `train.py` & `test.py` respectively. The inline documentation in these files will guide you in interfacing with evaluator properly.
+
+## Dataset location
+
+You **don't** need to upload the data set in submission and it will be provided in online submissions at `MINERL_DATA_ROOT` path. For local training and evaluations, you can download it once in your system via `./utility/verify_or_download_data.sh` or place manually into `data/` folder.
+
+## Time constraints
+
+### Round 1
+
+You have to train your models locally and upload the trained model in `train/` directory. But, to make sure, your training code is compatible with further round's interface, the training code will be executed in this round as well. The constraints will be timeout of 5 minutes.
+
+### Round 2
+
+You are expected to train your model online using the training phase docker container and output the trained model in `train/` directory. You need to ensure that your submission is trained in under 8,000,000 samples and within 4 days period. Otherwise, the container will be killed
+
+## Local evaluation
+
+You can perform local training and evaluation using utility scripts shared in this directory. To mimic the online training phase you can run `./utility/train_locally.sh` from repository root.
+
+```
+aicrowd_minerl_starter_kit❯ ./utility/train_locally.sh
+2019-07-22 07:58:38 root[77310] INFO Training Start...
+2019-07-22 07:58:38 crowdai_api.events[77310] DEBUG Registering crowdAI API Event : CROWDAI_EVENT_INFO training_started {'event_type': 'minerl_challenge:training_started'} # with_oracle? : False
+2019-07-22 07:58:40 minerl.env.malmo.instance.17c149[77310] INFO Starting Minecraft process: ['/var/folders/82/wsds_18s5dq321scc1j531m40000gn/T/tmpnyzpjrsc/Minecraft/launchClient.sh', '-port', '9001', '-env', '-runDir', '/var/folders/82/wsds_18s5dq321scc1j531m40000gn/T/tmpnyzpjrsc/Minecraft/run']
+2019-07-22 07:58:40 minerl.env.malmo.instance.17c149[77310] INFO Starting process watcher for process 77322 @ localhost:9001
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG This mapping 'snapshot_20161220' was designed for MC 1.11! Use at your own peril.
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG #################################################
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG          ForgeGradle 2.2-SNAPSHOT-3966cea
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG   https://github.com/MinecraftForge/ForgeGradle
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG #################################################
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG                Powered by MCP unknown
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG              http://modcoderpack.com
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG          by: Searge, ProfMobius, Fesh0r,
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG          R4wk, ZeuX, IngisKahn, bspkrs
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG #################################################
+2019-07-22 07:58:48 minerl.env.malmo.instance.17c149[77310] DEBUG Found AccessTransformer: malmomod_at.cfg
+2019-07-22 07:58:49 minerl.env.malmo.instance.17c149[77310] DEBUG :deobfCompileDummyTask
+2019-07-22 07:58:49 minerl.env.malmo.instance.17c149[77310] DEBUG :deobfProvidedDummyTask
+...
+```
+
+For local evaluation of your code, you can use `./utility/evaluation_locally.sh`, add `--verbose` if you want to view complete logs.
+
+```
+aicrowd_minerl_starter_kit❯ ./utility/evaluation_locally.sh
+PARSER: Waiting for status file to be generated by instance manager...
+PARSER: Waiting for status file to be generated by instance manager...
+PARSER: Waiting for status file to be generated by instance manager...
+PARSER: Status file found... (1563762810.9416661)
+{'totalNumberSteps': 1001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 1001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}]}
+{'totalNumberSteps': 2001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 2001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}]}
+{'totalNumberSteps': 3001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 3001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}]}
+...
+```
+
+The steps to mimic above in a docker environment will be added shortly.
 
 ## Submission
 
