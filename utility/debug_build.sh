@@ -1,11 +1,10 @@
 #!/bin/bash
 
-
 if [ -e environ_secret.sh ]
 then
-    source environ_secret.sh
+    source utility/environ_secret.sh
 else
-    source environ.sh
+    source utility/environ.sh
 fi
 
 # Expected Env variables : in environ.sh

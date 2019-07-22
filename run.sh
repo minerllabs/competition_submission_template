@@ -1,2 +1,2 @@
 #!/bin/bash
-python ./agent.py
+python ./run.py
