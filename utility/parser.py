@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import copy
 import json
 import os
 import signal
@@ -11,54 +12,73 @@ import crowdai_api
 import boto3
 import uuid
 
-# Where the output files will be located
-PERFORMANCE_DIRECTORY = os.getenv('PERFORMANCE_DIRECTORY', 'performance/mc_1/')
-# Time (in seconds) to wait before checking the file for lines again
-POLL_INTERVAL=1
-# How many seconds to let the submission run
-SUBMISSION_TIMEOUT = int(os.getenv('SUBMISSION_TIMEOUT', 24*60*60))
-# How many seconds to wait before considering the polling a failure
-NO_NEW_ENTRY_POLL_TIMEOUT = int(os.getenv('NO_NEW_ENTRY_POLL_TIMEOUT', 180))
-# Where to look if submission has finished
-EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
-# All the evaluations will be allowed to run only below gym environment
-MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamond-v0')
-
-line_count=0
-start_time = time.time()
-last_successful_poll_time = start_time
-submission_total_runtime = 0
-
-def make_subprocess_call(command, shell=False):
-    result = subprocess.run(command.split(), shell=shell, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    stdout = result.stdout.decode('utf-8')
-    stderr = result.stderr.decode('utf-8')
-    return result.returncode, stdout, stderr
-
-###############################################################
-# Helper Functions End
-###############################################################
-def sigusr1_handler(signum, stackframe):
-    print("The evaluator received SIGUSR1... shutting down our operation")
-    print("Last successful poll was: {}. Total runtime {}.".format(last_successful_poll_time, submission_total_runtime))
-    # Because SIGUSR1 is '10' on Linux
-    sys.exit(10)
-
-
-
-class AICrowdSubContractorError(Exception):
-    pass
 
 class AICrowdSubContractor:
-
     def __init__(self):
         self.oracle_events = crowdai_api.events.CrowdAIEvents(with_oracle=True)
-        self.totalNumberSteps = None
-        self.finished = False
-        self.payload = None
 
-    def generate_json(self, stage, episodes):
-        pass
+    def handle_event(self, payload):
+        print(payload)
+        if payload['state'] == 'FINISHED':
+            self.handle_success_event(payload)
+        elif payload['state'] == 'ERROR':
+            self.handle_error_event(payload)
+        else:
+            self.handle_info_event(payload)
+
+    def handle_info_event(self, payload):
+        self.oracle_events.register_event(
+            event_type=self.oracle_events.CROWDAI_EVENT_INFO,
+            payload=payload
+        )
+
+    def handle_success_event(self, payload):
+        self.oracle_events.register_event(
+            event_type=self.oracle_events.CROWDAI_EVENT_SUCCESS,
+            payload=payload
+        )
+
+    def handle_error_event(self, payload):
+        self.oracle_events.register_event(
+            event_type=self.oracle_events.CROWDAI_EVENT_ERROR,
+            payload=payload
+        )
+
+
+class Parser:
+    def __init__(self, directory, allowed_environment=None, maximum_instances=None, maximum_steps=None, raise_on_error=True, no_entry_poll_timeout=1800, submission_timeout=None, initial_poll_timeout=30*60):
+        self.directory = directory
+        self.allowed_environment = allowed_environment
+        self.maximum_instances = maximum_instances
+        self.maximum_steps = maximum_steps
+        self.raise_on_error = raise_on_error
+        self.no_entry_poll_timeout = no_entry_poll_timeout
+        self.submission_timeout = submission_timeout
+        self.initial_poll_timeout = initial_poll_timeout
+
+        self.aicrowd_subcontractor = AICrowdSubContractor()
+        self.start_time = time.time()
+        self.current_state = {}
+        self.finished = {}
+        self.last_change_time = {}
+        self.totalInstances = 0
+        self.payload = {
+            'state': 'PENDING',
+            'score': {},
+            'instances': []
+        }
+        self.freeze = False
+
+    def add_instance(self, instance_id):
+        self.current_state[instance_id] = {
+            'state': 'PENDING',
+            'episodes': [],
+            'score': {},
+            'totalNumberSteps': 0
+        }
+        self.finished[instance_id] = False
+        self.last_change_time[instance_id] = time.time()
+        self.totalInstances += 1
 
     def read_json_file(self, path):
         try:
@@ -67,25 +87,123 @@ class AICrowdSubContractor:
         except:
             return {}, False
 
-    def update_status(self, finished=False):
-        status_file = PERFORMANCE_DIRECTORY + 'status.json'
+    def send_information_to_sourcerer(self):
+        if not self.freeze:
+            instance_started = False
+            instance_running = False
+            for instance_id in self.current_state:
+                instance_state = self.current_state[instance_id]['state']
+                if instance_state != 'PENDING':
+                    instance_started = True
+                if instance_state != 'FINISHED' and instance_state != 'ERROR':
+                    instance_running = True
+            if instance_started:
+                self.payload['state'] = 'RUNNING'
+            if self.totalInstances > 0 and not instance_running:
+                self.payload['state'] = 'FINISHED'
+            self.payload['instances'] = self.current_state
+            self.payload['score'] = {
+                'score': sum(self.current_state[x]['score']['score'] for x in self.current_state),
+                'score_secondary': sum(self.current_state[x]['score']['score_secondary'] for x in self.current_state)
+            }
+
+        self.aicrowd_subcontractor.handle_event(self.payload)
+
+
+    def update_instance_if_changed(self, instance_id, currentInformation):
+        updated = False
+        if self.finished[instance_id]:
+            return False
+
+        previousInformation = self.current_state[instance_id]
+        if previousInformation['totalNumberSteps'] != currentInformation['totalNumberSteps']:
+            updated = True
+        self.current_state[instance_id] = copy.deepcopy(currentInformation)
+        return updated
+
+    def check_for_condition_breach(self):
+        breached = False
+        if self.totalInstances > self.maximum_instances:
+            breached = True
+            self.payload['reason'] = 'You started more instances (%d) then allowed limit (%d).' % (self.totalInstances, self.maximum_instances)
+        totalSteps = sum(self.current_state[x]["totalNumberSteps"] for x in self.current_state)
+        if totalSteps > self.maximum_steps:
+            breached = True
+            self.payload['reason'] = 'Steps (%d) are more then allowed limit (%d).' % (totalSteps, self.maximum_steps)
+        if (time.time() - self.start_time) > self.submission_timeout:
+            breached = True
+            self.payload['reason'] = 'Submission time increased the threshold (%d seconds).' % (self.submission_timeout)
+        if self.totalInstances == 0 and (time.time() - self.start_time) > self.initial_poll_timeout:
+            breached = True
+            self.payload['reason'] = 'No instance started in threshold (%d seconds).' % (self.initial_poll_timeout)
+
+        if breached:
+            self.payload['state'] = 'ERROR'
+        return breached
+
+    def update_information(self, finished=False):
+        if self.freeze:
+            return
+
+        any_instance_updated = False
+        instance_folders = list(filter(lambda x: os.path.isdir(os.path.join(self.directory, x)), os.listdir(self.directory)))
+        for instance_folder in instance_folders:
+            instance_id = instance_folder.split('mc_')[1]
+            if instance_id not in self.current_state:
+                self.add_instance(instance_id)
+
+            currentInformation = self.read_instance_information(instance_id, '/'.join([self.directory, instance_folder]))
+            updated = self.update_instance_if_changed(instance_id, currentInformation)
+
+            if updated:
+                self.last_change_time[instance_id] = time.time()
+
+            if not updated:
+                currentTime = time.time()
+                if (currentTime - self.last_change_time[instance_id]) > self.no_entry_poll_timeout:
+                    if len(currentInformation['episodes']) == currentInformation['totalNumberEpisodes']:
+                        currentInformation['state'] = 'FINISHED'
+                    else:
+                        currentInformation['state'] = 'ERROR'
+                    self.update_instance_if_changed(instance_id, currentInformation)
+                    self.finished[instance_id] = True
+                    updated = True
+
+            if updated:
+                any_instance_updated = True
+
+        if any_instance_updated:
+            self.send_information_to_sourcerer()
+        if self.check_for_condition_breach():
+            self.freeze = True
+            self.send_information_to_sourcerer()
+        if finished and not self.freeze:
+            return
+
+    def check_for_allowed_environment(self, environment, payload):
+        if self.allowed_environment is not None:
+            if self.allowed_environment != environment:
+                payload['state'] = 'ERROR'
+                payload['reason'] = 'Wrong environment used, you should use "%s" instead of "%s"' \
+                                    % (MINERL_GYM_ENV, payload['currentEnvironment'])
+                if self.raise_on_error:
+                    raise Exception(payload['reason'])
+                return False
+        return True
+
+    def read_instance_information(self, instance_id, instance_directory):
+        status_file = instance_directory + '/status.json'
         # {'totalNumberSteps': 18012, 'totalNumberEpisodes': 3, 'currentEnvironment': 'MineRLObtainDiamond-v0'}
         payload, found = self.read_json_file(status_file)
         payload['state'] = 'PENDING'
         payload['episodes'] = []
         score = 0.00
 
-        global MINERL_GYM_ENV
-        if payload['currentEnvironment'] != MINERL_GYM_ENV:
-            self.finished = True
-            payload['state'] = 'ERROR'
-            payload['reason'] = 'Wrong environment used, you should use "%s" instead of "%s"' \
-                                % (MINERL_GYM_ENV, payload['currentEnvironment'])
-            raise Exception(payload['reason'])
+        self.check_for_allowed_environment(payload['currentEnvironment'], payload)
 
         for episode in range(payload['totalNumberEpisodes'] + 1):
             # 000000-MineRLObtainDiamond-v0.json
-            episode_file = PERFORMANCE_DIRECTORY + str(episode).zfill(6) + '-' + payload['currentEnvironment'] + '.json'
+            episode_file = instance_directory + '/' + str(episode).zfill(6) + '-' + payload['currentEnvironment'] + '.json'
             episode_info, found = self.read_json_file(episode_file)
             if found:
                 # Atleast one file present, so submission has started for sure.
@@ -96,99 +214,60 @@ class AICrowdSubContractor:
                 episode_info['rewards'] = sum(episode_info['rewards'])
                 score += episode_info['rewards']
                 payload['episodes'].append(episode_info)
-            elif finished and not found and payload['state'] == 'IN_PROGRESS' and episode == payload['totalNumberEpisodes']:
-                # One missing is expected in proper finish.
-                print('Finished on episode: %s', episode)
-                payload['state'] = 'FINISHED'
-                payload['score'] = {
-                    "score": score,
-                    "score_secondary": 0.0
-                }
-                self.finished = True
-                self.payload = payload
-                self.handle_success_event(payload)
-                return True
-            elif finished:
+            else:
                 break
+        payload['score'] = {
+            "score": score,
+            "score_secondary": 0.0
+        }
+        return payload
 
-        if finished:
-            if self.finished:
-                self.handle_success_event(self.payload)
-                return True
-            # Abrupt exit of agent code.
-            payload['state'] = 'ERROR'
-            self.handle_error_event(payload)
-            return True
+# Where the output files will be located
+PERFORMANCE_DIRECTORY = os.getenv('PERFORMANCE_DIRECTORY', 'performance/')
+# Time (in seconds) to wait before checking performance directory updates
+POLL_INTERVAL=1
+# How many seconds to let the submission run
+SUBMISSION_TIMEOUT = int(os.getenv('SUBMISSION_TIMEOUT', 24*60*60))
+# How many seconds to wait before first instance start running
+INITIAL_POLL_TIMEOUT = int(os.getenv('INITIAL_POLL_TIMEOUT', 3*60))
+# How many seconds to wait before considering instance manager is dead
+NO_NEW_ENTRY_POLL_TIMEOUT = int(os.getenv('NO_NEW_ENTRY_POLL_TIMEOUT', 180))
+# Maximum number of instances to launch
+MAX_ALLOWED_INSTANCES = int(os.getenv('MAX_ALLOWED_INSTANCES', 1))
+# Maximum number of steps
+MAX_ALLOWED_STEPS = int(os.getenv('MAX_ALLOWED_STEPS', 1500))
+# All the evaluations will be allowed to run only below gym environment
+MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamond-v0')
 
-        if self.totalNumberSteps != payload['totalNumberSteps']:
-            self.totalNumberSteps = payload['totalNumberSteps']
-            self.handle_info_event(payload)
-            return True
+# Where to look if submission has finished
+EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
 
-        return False
 
-    def handle_info_event(self, payload):
-        print(payload)
-        self.oracle_events.register_event(
-            event_type=self.oracle_events.CROWDAI_EVENT_INFO,
-            payload=payload
-        )
+###############################################################
+# Helper Functions End
+###############################################################
+def sigusr1_handler(signum, stackframe):
+    print("The evaluator received SIGUSR1... shutting down our operation")
+    sys.exit(10)
 
-    def handle_success_event(self, payload):
-        print(payload)
-        self.oracle_events.register_event(
-            event_type=self.oracle_events.CROWDAI_EVENT_SUCCESS,
-            payload=payload
-        )
-
-    def handle_error_event(self, payload):
-        print(payload)
-        self.oracle_events.register_event(
-            event_type=self.oracle_events.CROWDAI_EVENT_ERROR,
-            payload=payload
-        )
 
 if __name__ == '__main__':
-    subcontractor = AICrowdSubContractor()
-    # Register a signal hanlder for SIGUSR1 that is sent by the wrapper script when it wants to stop the parser
-    signal.signal(signal.SIGUSR1, sigusr1_handler)
-
-    status_file = PERFORMANCE_DIRECTORY + 'status.json'
-    status_file_found = False
+    parser = Parser(PERFORMANCE_DIRECTORY,
+                    allowed_environment=MINERL_GYM_ENV,
+                    maximum_instances=MAX_ALLOWED_INSTANCES,
+                    maximum_steps=MAX_ALLOWED_STEPS,
+                    raise_on_error=True,
+                    no_entry_poll_timeout=NO_NEW_ENTRY_POLL_TIMEOUT,
+                    submission_timeout=SUBMISSION_TIMEOUT,
+                    initial_poll_timeout=INITIAL_POLL_TIMEOUT)
 
     while True:
-        if not status_file_found:
-            if not os.path.exists(status_file):
-                print("PARSER: Waiting for status file to be generated by instance manager...")
-                time.sleep(10)
-                continue
-            else:
-                print("PARSER: Status file found... ({now})".format(now=time.time()))
-                status_file_found = True
-
-        submission_total_runtime = time.time() - start_time
-
-        if submission_total_runtime > SUBMISSION_TIMEOUT:
-            raise Exception("Submission runtime({runtime}s) exceeded timeout({timeout}s)".format(runtime=submission_total_runtime, timeout=SUBMISSION_TIMEOUT))
-
-        updated = subcontractor.update_status(finished=False)
-        if not updated:
-            time_since_last_update = time.time() - last_successful_update_time
-            if time_since_last_update > NO_NEW_ENTRY_POLL_TIMEOUT:
-                print("PARSER: Submission update polling timed out (no new update was written in {lsp}s) exceeded poll timeout({timeout}s)".format(lsp=time_since_last_update, timeout=NO_NEW_ENTRY_POLL_TIMEOUT))
-                subcontractor.update_status()
-                subcontractor.update_status(finished=True)
-                break
-        else:
-            last_successful_update_time = time.time()
+        parser.update_information()
 
         if os.path.exists(EXITED_SIGNAL_PATH):
             # Sweet time to get performance written after agent exit
             time.sleep(10)
-            subcontractor.update_status()
-            subcontractor.update_status(finished=True)
-            end_time = time.time()
-            print("Total time taken:", end_time - start_time)
+            parser.update_information(finished=True)
             break
 
         time.sleep(POLL_INTERVAL)
