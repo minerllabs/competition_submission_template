@@ -145,7 +145,7 @@ You are expected to train your model online using the training phase docker cont
 
 ## Local evaluation
 
-You can perform local training and evaluation using utility scripts shared in this directory. To mimic the online training phase you can run `./utility/train_locally.sh` from repository root.
+You can perform local training and evaluation using utility scripts shared in this directory. To mimic the online training phase you can run `./utility/train_locally.sh` from repository root, you can specify `--verbose` for complete logs.
 
 ```
 aicrowd_minerl_starter_kit❯ ./utility/train_locally.sh --verbose
