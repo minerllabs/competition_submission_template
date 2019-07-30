@@ -25,7 +25,7 @@ def main():
     actions = [env.action_space.sample() for _ in range(10)]
     xposes = []
     for _ in range(1):
-        obs, info = env.reset()
+        obs = env.reset()
         done = False
         netr = 0
         while not done:

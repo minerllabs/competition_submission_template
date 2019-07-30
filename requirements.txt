@@ -1,5 +1,5 @@
 crowdai_api
-minerl==0.2.2
+minerl==0.2.3
 coloredlogs
 matplotlib
 opencv-python
