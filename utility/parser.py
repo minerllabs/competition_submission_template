@@ -15,10 +15,12 @@ import uuid
 
 class AICrowdSubContractor:
     def __init__(self):
+        self.debug = False
         self.oracle_events = crowdai_api.events.CrowdAIEvents(with_oracle=True)
 
     def handle_event(self, payload):
-        print(payload)
+        if self.debug:
+            print(payload)
         if payload['state'] == 'FINISHED':
             self.handle_success_event(payload)
         elif payload['state'] == 'ERROR':
@@ -46,7 +48,7 @@ class AICrowdSubContractor:
 
 
 class Parser:
-    def __init__(self, directory, allowed_environment=None, maximum_instances=None, maximum_steps=None, raise_on_error=True, no_entry_poll_timeout=1800, submission_timeout=None, initial_poll_timeout=30*60):
+    def __init__(self, directory, allowed_environment=None, maximum_instances=None, maximum_steps=None, raise_on_error=True, no_entry_poll_timeout=1800, submission_timeout=None, initial_poll_timeout=30*60, debug=False):
         self.directory = directory
         self.allowed_environment = allowed_environment
         self.maximum_instances = maximum_instances
@@ -57,6 +59,7 @@ class Parser:
         self.initial_poll_timeout = initial_poll_timeout
 
         self.aicrowd_subcontractor = AICrowdSubContractor()
+        self.aicrowd_subcontractor.debug = debug
         self.start_time = time.time()
         self.current_state = {}
         self.finished = {}
@@ -158,7 +161,7 @@ class Parser:
             if updated:
                 self.last_change_time[instance_id] = time.time()
 
-            if not updated:
+            if not updated and not self.finished[instance_id]:
                 currentTime = time.time()
                 if (currentTime - self.last_change_time[instance_id]) > self.no_entry_poll_timeout:
                     if len(currentInformation['episodes']) == currentInformation['totalNumberEpisodes']:
@@ -199,9 +202,10 @@ class Parser:
         payload['episodes'] = []
         score = 0.00
 
-        self.check_for_allowed_environment(payload['currentEnvironment'], payload)
+        if 'currentEnvironment' in payload:
+            self.check_for_allowed_environment(payload['currentEnvironment'], payload)
 
-        for episode in range(payload['totalNumberEpisodes'] + 1):
+        for episode in range(payload.get('totalNumberEpisodes', -1) + 1):
             # 000000-MineRLObtainDiamond-v0.json
             episode_file = instance_directory + '/' + str(episode).zfill(6) + '-' + payload['currentEnvironment'] + '.json'
             episode_info, found = self.read_json_file(episode_file)
@@ -216,12 +220,18 @@ class Parser:
                 payload['episodes'].append(episode_info)
             else:
                 break
+
         payload['score'] = {
             "score": score,
             "score_secondary": 0.0
         }
+
+        if 'totalNumberSteps' not in payload:
+            payload['totalNumberSteps'] = 0
         return payload
 
+# Debug the aicrowd json
+ENABLE_AICROWD_JSON_OUTPUT = bool(os.getenv('ENABLE_AICROWD_JSON_OUTPUT', 'True'))
 # Where the output files will be located
 PERFORMANCE_DIRECTORY = os.getenv('PERFORMANCE_DIRECTORY', 'performance/')
 # Time (in seconds) to wait before checking performance directory updates
@@ -259,7 +269,8 @@ if __name__ == '__main__':
                     raise_on_error=True,
                     no_entry_poll_timeout=NO_NEW_ENTRY_POLL_TIMEOUT,
                     submission_timeout=SUBMISSION_TIMEOUT,
-                    initial_poll_timeout=INITIAL_POLL_TIMEOUT)
+                    initial_poll_timeout=INITIAL_POLL_TIMEOUT,
+                    debug=ENABLE_AICROWD_JSON_OUTPUT)
 
     while True:
         parser.update_information()
