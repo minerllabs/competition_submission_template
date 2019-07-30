@@ -1,11 +1,21 @@
 #!/bin/bash
 set -e
-./utility/verify_or_download_data.sh
+
+
+AICROWD_DATA_ENABLED="YES"
+if [[ " $@ " =~ " --no-data " ]]; then
+   AICROWD_DATA_ENABLED="NO"
+else
+    python3 ./utility/verify_or_download_data.py
+fi
+
 
 EXTRAOUTPUT=" > /dev/null 2>&1 "
 if [[ " $@ " =~ " --verbose " ]]; then
    EXTRAOUTPUT=""
 fi
+
+
 
 # Run local name server
 eval "pyro4-ns $EXTRAOUTPUT &"

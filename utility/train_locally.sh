@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
-./utility/verify_or_download_data.sh
+
+
+AICROWD_DATA_ENABLED="YES"
+if [[ " $@ " =~ " --no-data " ]]; then
+   AICROWD_DATA_ENABLED="NO"
+else
+    python3 ./utility/verify_or_download_data.py
+fi
+
+
 
 EXTRAOUTPUT=" > /dev/null 2>&1 "
 if [[ " $@ " =~ " --verbose " ]]; then
@@ -18,6 +27,7 @@ trap "kill -11 $! > /dev/null 2>&1;" EXIT
 
 # Run the training phase
 sleep 2
+echo "RUNNING TRAINING!"
 export MINERL_INSTANCE_MANAGER_REMOTE="1"
 export EVALUATION_STAGE='training'
 export EVALUATION_RUNNING_ON='local'
