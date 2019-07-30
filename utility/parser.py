@@ -130,7 +130,7 @@ class Parser:
             breached = True
             self.payload['reason'] = 'You started more instances (%d) then allowed limit (%d).' % (self.totalInstances, self.maximum_instances)
         totalSteps = sum(self.current_state[x]["totalNumberSteps"] for x in self.current_state)
-        if totalSteps > self.maximum_steps:
+        if self.maximum_steps and totalSteps > self.maximum_steps:
             breached = True
             self.payload['reason'] = 'Steps (%d) are more then allowed limit (%d).' % (totalSteps, self.maximum_steps)
         if (time.time() - self.start_time) > self.submission_timeout:
@@ -245,7 +245,7 @@ NO_NEW_ENTRY_POLL_TIMEOUT = int(os.getenv('NO_NEW_ENTRY_POLL_TIMEOUT', 180))
 # Maximum number of instances to launch
 MAX_ALLOWED_INSTANCES = int(os.getenv('MAX_ALLOWED_INSTANCES', 1))
 # Maximum number of steps
-MAX_ALLOWED_STEPS = int(os.getenv('MAX_ALLOWED_STEPS', 1500))
+MAX_ALLOWED_STEPS = int(os.getenv('MAX_ALLOWED_STEPS', 0)) or None
 # All the evaluations will be allowed to run only below gym environment
 MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamond-v0')
 
