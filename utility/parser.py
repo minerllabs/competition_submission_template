@@ -9,7 +9,6 @@ import time
 import glob
 
 import crowdai_api
-import boto3
 import uuid
 
 
