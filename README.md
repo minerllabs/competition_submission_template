@@ -1,4 +1,7 @@
-![AIcrowd-Logo](https://raw.githubusercontent.com/AIcrowd/AIcrowd/master/app/assets/images/misc/aicrowd-horizontal.png)
+<img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/35/CMU_wordmark_1500px-min.png" width="50%"> 
+<img src="https://raw.githubusercontent.com/AIcrowd/AIcrowd/master/app/assets/images/misc/aicrowd-horizontal.png" width="20%"> <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/38/PFN_logo.png" width="15%" style="margin-top:10px">
+ <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/34/MSFT_logo_rgb_C-Gray.png" width="20%" style="margin-top:10px">
+
 
 # NeurIPS 2019 : MineRL Challenge Starter Kit
 
@@ -9,6 +12,27 @@ Instructions to make submissions to the [NeurIPS 2019 : MineRL Challenge](https:
 Participants will have to submit their code, with packaging specifications, and the evaluator will automatically build a docker image and execute their code against a series of secret datasets.
 
 ![](https://i.imgur.com/XB1WORT.gif)
+
+
+### Welcome to Round 1 of the MineRL Challenge
+
+Welcome to Round 1 everyone! This is how the competition will run! :)
+
+1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition)
+2. **Clone** this repo [AIcrowd starter template](https://github.com/minerllabs/competition_submission_starter_template) and start developing your submissions.
+3. **Submit** an agent to the leaderboard:
+    - **Train your agents locally** (or on Azure) in under **8,000,000 samples** over **4 days**. Participants should use hardware **no more powerful than NG6v2 instances on Azure** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a NVIDIA P100 GPU.) 
+    - **Push your repository to [AIcrowd GitLab](https://gitlab.aicrowd.com)**, which verifies that it can successfully be re-trained by the organizers at the end of Round 1 and then runs the test entrypoint to evaluate the trained agent's performance! 
+
+Once the full evaluation of the uploaded model/code is done, the participant's submission will appear on the leaderboard!
+
+[**>> Get started now! <<** ](https://github.com/minerllabs/competition_submission_starter_template)
+- [MineRL Competition Page](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition) - Main registration page & leaderboard.
+- [Submission Starter Template](https://github.com/minerllabs/competition_submission_starter_template) - Template for submisions and guide to submit!
+- [Example Baselines](https://github.com/minerllabs/baselines) - A set of competition and non-competition baselines for `minerl`.
+
+
+
 
 ### Setup
 
