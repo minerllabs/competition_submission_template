@@ -1,33 +1,51 @@
-# NeurIPS 2019 : MineRL Challenge Starter Kit
+# NeurIPS 2019: MineRL Competition Starter Kit
 
 [![Discourse status](https://img.shields.io/discourse/https/discourse.aicrowd.com/status.svg)](https://discourse.aicrowd.com/) [![Discord](https://img.shields.io/discord/565639094860775436.svg)](https://discord.gg/BT9uegr)
 
-Instructions to make submissions to the [NeurIPS 2019 : MineRL Challenge](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition).
-
-Participants will have to submit their code, with packaging specifications, and the evaluator will automatically build a docker image and execute their code against a series of secret datasets.
-
-![](https://i.imgur.com/XB1WORT.gif)
 
 
-### Welcome to Round 1 of the MineRL Challenge
+This repository is the main MineRL Competition **submission template and starter kit**! 
 
-Welcome to Round 1 everyone! This is how the competition will run! :)
+**This repository contains**:
+*  **Documentation** on how to submit your agent to the leaderboard
+*  **The procedure** for Round 1 (how long you should train your agent, how we evaluate and re-train your agent, etc.)
+*  **Starter code** for you to base your submission!
 
-1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition)
-2. **Clone** this repo [AIcrowd starter template](https://github.com/minerllabs/competition_submission_starter_template) and start developing your submissions.
-3. **Submit** an agent to the leaderboard:
-    - **Train your agents locally** (or on Azure) in under **8,000,000 samples** over **4 days**. Participants should use hardware **no more powerful than NG6v2 instances on Azure** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a NVIDIA P100 GPU.) 
-    - **Push your repository to [AIcrowd GitLab](https://gitlab.aicrowd.com)**, which verifies that it can successfully be re-trained by the organizers at the end of Round 1 and then runs the test entrypoint to evaluate the trained agent's performance! 
-
-Once the full evaluation of the uploaded model/code is done, the participant's submission will appear on the leaderboard!
-
-[**>> Get started now! <<** ](https://github.com/minerllabs/competition_submission_starter_template)
+**Other Resources**:
 - [MineRL Competition Page](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition) - Main registration page & leaderboard.
-- [Submission Starter Template](https://github.com/minerllabs/competition_submission_starter_template) - Template for submisions and guide to submit!
+- [MineRL Documentation](http://minerl.io/docs) - Documentation for the `minerl` package and dataset!
 - [Example Baselines](https://github.com/minerllabs/baselines) - A set of competition and non-competition baselines for `minerl`.
 
 
 
+![](https://i.imgur.com/XB1WORT.gif)
+
+
+#  Competition Procedure: Round 1
+
+Welcome to Round 1 everyone! The following is a high level description of how Round 1 works.
+
+![](http://minerl.io/assets/images/round1_procedure.png)
+
+
+1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition)
+2. **Clone** this repo  and start developing your submissions.
+
+3. **Train** your models against `MineRLObtainDiamond-v0` using the `train_locally.sh` or on Azure  with **only 8,000,000 samples** in less than **four days** using hardware **no powerful than a NG6v2 instance** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a single NVIDIA P100 GPU.) 
+
+3. [**Submit**]() your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)]().  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
+
+Once Round 1 is complete, the organizers will:
+
+1. **Examine** the code repositories of the top submissions on the leaderboard to ensure compliance with the competition rules.
+2. **Retrain** the top submissions from scratch to ensure reproducibility of the leaderboard score!  **NOTE: Make sure that you train your models in UNDER 8,000,000 samples using a similar (or worse) hardware spec than above** so that you are **not disqualified** for a score mismatch!
+
+2. **Evaluate** the resulting models again over several hundred episodes to determine the final ranking.
+
+The code repositories associated with the corresponding submissions will be forked and scrubbed of any files larger than 15MB to ensure that participants are not using any pre-trained models in the subsequent round.  
+
+
+# How to Submit a Model!
 
 ### Setup
 
@@ -35,16 +53,16 @@ Once the full evaluation of the uploaded model/code is done, the participant's s
 
 * **Create your new conda environment**
 
-```sh
-conda create --name minerl_challenge
-conda activate minerl_challenge
-```
+  ```sh
+  conda create --name minerl_challenge
+  conda activate minerl_challenge
+  ```
 
 * **Your code specific dependencies**
 
-```sh
-conda install <your-package>
-```
+  ```sh
+  conda install <your-package>
+  ```
 
 ### Clone repository
 
@@ -58,12 +76,12 @@ pip install -r requirements.txt
 
 To get started with the environment and dataset [please check out our quick start guide here](http://minerl.io/docs/tutorials/getting_started.html)!
 
-This competition uses a set of Gym environments based on [Malmo](https://github.com/Microsoft/malmo). The environment and dataset loader will be available through a pip package.
+This competition uses the [MineRL](http://minerl.io/docs)  Gym environments based on [Malmo]. The environment and dataset loader will be available through a pip package.
 
 The main task of the competition is solving the `MineRLObtainDiamond-v0` environment. In this environment, the agent begins in a random starting location without any items, and is tasked with obtaining a diamond. This task can only be accomplished by navigating the complex item hierarchy of Minecraft.
 
 
-# How do I specify my software runtime ?
+## How do I specify my software runtime ?
 
 The software runtime is specified by exporting your `conda` env to the root
 of your repository by doing :
@@ -76,7 +94,7 @@ conda env export --no-build > environment.yml
 
 This `environment.yml` file will be used to recreate the `conda environment`. This repository includes an example `environment.yml`
 
-# What should my code structure be like ?
+## What should my code structure be like ?
 
 Please follow the example structure shared in the starter kit for the code structure.
 The different files and directories have following meaning:
@@ -156,7 +174,7 @@ You **don't** need to upload the data set in submission and it will be provided 
 
 ### Round 1
 
-You have to train your models locally and upload the trained model in `train/` directory. But, to make sure, your training code is compatible with further round's interface, the training code will be executed in this round as well. The constraints will be timeout of 5 minutes.
+You have to train your models locally **with under 8,000,000 samples** and with **worse or comprable hardware to that above** and upload the trained model in `train/` directory. But, to make sure, your training code is compatible with further round's interface, the training code will be executed in this round as well. The constraints will be timeout of 5 minutes.
 
 ### Round 2
 
