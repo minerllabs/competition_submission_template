@@ -1,12 +1,13 @@
+
+
+# NeurIPS 2019 : MineRL Challenge Starter Kit
 <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/35/CMU_wordmark_1500px-min.png" width="50%">  
 
   <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/34/MSFT_logo_rgb_C-Gray.png" width="20%" style="margin-top:10px">
 
 
  <img src="https://raw.githubusercontent.com/AIcrowd/AIcrowd/master/app/assets/images/misc/aicrowd-horizontal.png" width="20%">   <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/38/PFN_logo.png" width="15%" style="margin-top:10px">
-
-# NeurIPS 2019 : MineRL Challenge Starter Kit
-
+ 
 [![Discourse status](https://img.shields.io/discourse/https/discourse.aicrowd.com/status.svg)](https://discourse.aicrowd.com/) [![Discord](https://img.shields.io/discord/565639094860775436.svg)](https://discord.gg/BT9uegr)
 
 Instructions to make submissions to the [NeurIPS 2019 : MineRL Challenge](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition).
