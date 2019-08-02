@@ -4,7 +4,7 @@
 
 
 
-This repository is the main MineRL Competition **submission template and starter kit**! 
+This repository is the main MineRL Competition **submission template and starter kit**! Compete to solve `MineRLObtainDiamond-v0` now!
 
 **This repository contains**:
 *  **Documentation** on how to submit your agent to the leaderboard
@@ -23,7 +23,7 @@ This repository is the main MineRL Competition **submission template and starter
 
 #  Competition Procedure: Round 1
 
-Welcome to Round 1 everyone! The following is a high level description of how Round 1 works.
+Welcome to Round 1! The following is a high level description of how this round works.
 
 ![](http://minerl.io/assets/images/round1_procedure.png)
 
@@ -47,36 +47,58 @@ The code repositories associated with the corresponding submissions will be fork
 
 # How to Submit a Model!
 
-### Setup
+## Setup
 
-- **Anaconda** (By following instructions [here](https://www.anaconda.com/download)) At least version `4.5.11` is required to correctly populate `environment.yml`.
 
-* **Create your new conda environment**
 
-  ```sh
-  conda create --name minerl_challenge
-  conda activate minerl_challenge
-  ```
+1.  **Clone the github repository** or press the "Use this Template" button on GitHub!
 
-* **Your code specific dependencies**
+    ```
+    git clone https://github.com/minerllabs/competition_submission_starter_template.git
+    ```
 
-  ```sh
-  conda install <your-package>
-  ```
+2. **Install** competition specific dependencies! **Make sure you have the [JDK 8 installed first](http://minerl.io/docs/tutorials/getting_started.html)!**
+    ```
+    # 1. Make sure to install the JDK first
+    # -> Go to http://minerl.io/docs/tutorials/getting_started.html
 
-### Clone repository
+    # 2. Install the `minerl` package and the dependencies for the competition
+    cd competition_submission_starter_template
+    pip3 install -r requirements.txt
+    ```
 
-```
-git clone git@github.com:AIcrowd/neurips2019_minerl_challenge_starter_kit.git
-cd neurips2019_minerl_challenge_starter_kit
-pip install -r requirements.txt
-```
+3. **Specify** your specific submission dependencies (PyTorch, Tensorflow, kittens, etc.)
+
+    * (Optional) **Anaconda Environment**. If you would like to use anaconda to manage your environment, make sure at least version `4.5.11` is required to correctly populate `environment.yml` (By following instructions [here](https://www.anaconda.com/download)). Then:
+        * **Create your new conda environment**
+
+            ```sh
+            conda create --name minerl_challenge
+            conda activate minerl_challenge
+            ```
+
+      * **Your code specific dependencies**
+        ```sh
+        conda install <your-package>
+        ```
+
+    * **Pip Packages** If you are using specific Python packages **make sure to add them to** `requirements.txt`! Here's an example:
+      ```
+      # requirements.txt
+      minerl>0.2.3
+      
+      matplotlib
+      tensorflow
+      ```
+    * **Apt Packages** If your training procedure or agent depends on specific Debian (Ubuntu, etc.) packages, add them to `apt.txt`.
+
+
 
 ### Your Submission
 
 To get started with the environment and dataset [please check out our quick start guide here](http://minerl.io/docs/tutorials/getting_started.html)!
 
-This competition uses the [MineRL](http://minerl.io/docs)  Gym environments based on [Malmo]. The environment and dataset loader will be available through a pip package.
+This competition uses the [MineRL](http://minerl.io/docs)  Gym environments based on Malmo. The environment and dataset loader will be available through a pip package.
 
 The main task of the competition is solving the `MineRLObtainDiamond-v0` environment. In this environment, the agent begins in a random starting location without any items, and is tasked with obtaining a diamond. This task can only be accomplished by navigating the complex item hierarchy of Minecraft.
 
@@ -267,7 +289,7 @@ The quick-start kit was authored by
 
 The competition is organized by the following team:
 
-* William H. Guss (Carnegie Mellon University)
+* [William H. Guss](http://wguss.ml) (Carnegie Mellon University)
 * Mario Ynocente Castro (Preferred Networks)
 * Cayden Codel (Carnegie Mellon University)
 * Katja Hofmann (Microsoft Research)
