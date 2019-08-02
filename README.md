@@ -1,13 +1,5 @@
-
-
 # NeurIPS 2019 : MineRL Challenge Starter Kit
-<img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/35/CMU_wordmark_1500px-min.png" width="50%">  
 
-  <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/34/MSFT_logo_rgb_C-Gray.png" width="20%" style="margin-top:10px">
-
-
- <img src="https://raw.githubusercontent.com/AIcrowd/AIcrowd/master/app/assets/images/misc/aicrowd-horizontal.png" width="20%">   <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/38/PFN_logo.png" width="15%" style="margin-top:10px">
- 
 [![Discourse status](https://img.shields.io/discourse/https/discourse.aicrowd.com/status.svg)](https://discourse.aicrowd.com/) [![Discord](https://img.shields.io/discord/565639094860775436.svg)](https://discord.gg/BT9uegr)
 
 Instructions to make submissions to the [NeurIPS 2019 : MineRL Challenge](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition).
@@ -250,6 +242,34 @@ and if everything works out correctly, then you should be able to see the final 
 
 **Best of Luck** :tada: :tada:
 
-# Author
+# Team
 
-Shivam Khandelwal <https://twitter.com/skbly7>
+The quick-start kit was authored by 
+**[Shivam Khandelwal](https://twitter.com/skbly7)** with help from [William H. Guss](http://wguss.ml)
+
+The competition is organized by the following team:
+
+* William H. Guss (Carnegie Mellon University)
+* Mario Ynocente Castro (Preferred Networks)
+* Cayden Codel (Carnegie Mellon University)
+* Katja Hofmann (Microsoft Research)
+* Brandon Houghton (Carnegie Mellon University)
+* Noboru Kuno (Microsoft Research)
+* Crissman Loomis (Preferred Networks)
+* Keisuke Nakata (Preferred Networks)
+* Stephanie Milani (University of Maryland, Baltimore County and Carnegie Mellon University)
+* Sharada Mohanty (AIcrowd)
+* Diego Perez Liebana (Queen Mary University of London)
+* Ruslan Salakhutdinov (Carnegie Mellon University)
+* Shinya Shiroshita (Preferred Networks)
+* Nicholay Topin (Carnegie Mellon University)
+* Avinash Ummadisingu (Preferred Networks)
+* Manuela Veloso (Carnegie Mellon University)
+* Phillip Wang (Carnegie Mellon University)
+
+
+<img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/35/CMU_wordmark_1500px-min.png" width="50%"> 
+
+  <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/34/MSFT_logo_rgb_C-Gray.png" width="20%" style="margin-top:10px">
+
+ <img src="https://raw.githubusercontent.com/AIcrowd/AIcrowd/master/app/assets/images/misc/aicrowd-horizontal.png" width="20%">   <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/38/PFN_logo.png" width="15%" style="margin-top:10px">
