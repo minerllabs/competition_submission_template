@@ -169,11 +169,9 @@ You **don't** need to upload the data set in submission and it will be provided 
 
 ## Training and Testing Code Entrypoint (where you write your code!)
 
-The evaluator will use `/home/aicrowd/run.sh` as the entrypoint, so please remember to have a `run.sh` at the root, which can instantitate any necessary environment variables, and also start executing your actual code. This repository includes a sample `run.sh` file.
-If you are using a Dockerfile to specify your software environment, please remember to create a `aicrowd` user, and place the entrypoint code at `run.sh`.
+The evaluator will use `/home/aicrowd/run.sh` as the entrypoint, so please remember to include the `run.sh` in this repsoitory in your submission!
 
 The `run.sh` in turn calls your training and testing code present in `train.py` & `test.py` respectively. The inline documentation in these files will guide you in interfacing with evaluator properly.
-
 
 ## IMPORTANT: Saving Models during Training!
 
@@ -196,9 +194,9 @@ Then you can create a submission by making a _tag push_ to your repository on [h
 Then you can add the correct git remote, and finally submit by doing :
 
 ```
-cd neurips2019_minerl_challenge_starter_kit
+cd competition_submission_starter_template
 # Add AIcrowd git remote endpoint
-git remote add aicrowd git@gitlab.aicrowd.com:<YOUR_AICROWD_USER_NAME>/neurips2019_minerl_challenge_starter_kit.git
+git remote add aicrowd git@gitlab.aicrowd.com:<YOUR_AICROWD_USER_NAME>/competition_submission_starter_template.git
 git push aicrowd master
 
 # Create a tag for your submission and push
@@ -211,7 +209,7 @@ git push aicrowd submission-v0.1
 ```
 
 You now should be able to see the details of your submission at :
-[gitlab.aicrowd.com/<YOUR_AICROWD_USER_NAME>/neurips2019_minerl_challenge_starter_kit/issues](gitlab.aicrowd.com//<YOUR_AICROWD_USER_NAME>/neurips2019_minerl_challenge_starter_kit/issues)
+[gitlab.aicrowd.com/<YOUR_AICROWD_USER_NAME>/competition_submission_starter_template/issues](gitlab.aicrowd.com//<YOUR_AICROWD_USER_NAME>/competition_submission_starter_template/issues)
 
 **NOTE**: Remember to update your username in the link above :wink:
 
