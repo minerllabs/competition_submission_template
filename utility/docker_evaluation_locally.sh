@@ -27,14 +27,15 @@ if [[ " $@ " =~ " --nvidia " ]]; then
     -e CROWDAI_IS_GRADING=True \
     -e CROWDAI_DEBUG_MODE=True \
     -it ${IMAGE_NAME}:${IMAGE_TAG} \
-    /bin/bash
+    xvfb-run -a ./utility/evaluation_locally.sh "$@"
 else
-    echo "To run your submission with nvidia drivers, use \"--nvidia\" with this script"
+    echo "To run your submission with nvidia drivers locally, use \"--nvidia\" with this script"
+    echo "$@"
     sudo docker run \
     --net=host \
     --user 0 \
     -e CROWDAI_IS_GRADING=True \
     -e CROWDAI_DEBUG_MODE=True \
     -it ${IMAGE_NAME}:${IMAGE_TAG} \
-    /bin/bash
+    xvfb-run -a ./utility/evaluation_locally.sh "$@"
 fi

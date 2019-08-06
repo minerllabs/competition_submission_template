@@ -169,9 +169,9 @@ You **don't** need to upload the data set in submission and it will be provided 
 
 ## Training and Testing Code Entrypoint (where you write your code!)
 
-The evaluator will use `/home/aicrowd/run.sh` as the entrypoint, so please remember to include the `run.sh` in this repsoitory in your submission!
+The evaluator will use `train.py` and `test.py` as the entrypoint for training and testing/inference stage respectively, so please remember to include the files in your submission!
 
-The `run.sh` in turn calls your training and testing code present in `train.py` & `test.py` respectively. The inline documentation in these files will guide you in interfacing with evaluator properly.
+The inline documentation in these files will guide you in interfacing with evaluator properly.
 
 ## IMPORTANT: Saving Models during Training!
 
@@ -272,8 +272,10 @@ aicrowd_minerl_starter_kit❯ ./utility/evaluation_locally.sh
 ...
 ```
 
-The steps to mimic above in a docker environment will be added shortly.
+For running/testing your submission in a docker environment (ideantical to online submission), you can use `./utility/docker_train_locally.sh` and `./utility/docker_evaluation_locally.sh`. You can also run docker image with bash entrypoint for debugging on the go with the help of `./utility/docker_run.sh`. These scripts respect following parameters:
 
+* `--no-build`: To skip docker image build and use the last build image
+* `--nvidia`: To use `nvidia-docker` instead of `docker` which include your nvidia related drivers inside docker image
 
 
 # Team
