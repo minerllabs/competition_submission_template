@@ -12,3 +12,6 @@ openjdk-8-jdk
 xvfb
 x11vnc
 freeglut3-dev
+libx11-6
+python-opengl
+x11-xserver-utils
