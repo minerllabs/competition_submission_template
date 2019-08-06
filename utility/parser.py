@@ -163,7 +163,7 @@ class Parser:
             if (not updated and not self.finished[instance_id]) or finished:
                 currentTime = time.time()
                 if (currentTime - self.last_change_time[instance_id]) > self.no_entry_poll_timeout or finished:
-                    if len(currentInformation['episodes']) == currentInformation['totalNumberEpisodes']:
+                    if 'totalNumberEpisodes' in currentInformation and len(currentInformation['episodes']) == currentInformation['totalNumberEpisodes']:
                         currentInformation['state'] = 'FINISHED'
                     else:
                         currentInformation['state'] = 'ERROR'
