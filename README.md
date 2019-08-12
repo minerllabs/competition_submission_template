@@ -160,11 +160,11 @@ The `aicrowd.json` of each submission should contain the following content:
 
 This JSON is used to map your submission to the said challenge, so please remember to use the correct `challenge_id` and `grader_id` as specified above.
 
-Please specify if your code will a GPU or not for the evaluation of your model. If you specify `true` for the GPU, a **NVIDIA Tesla K80 GPU** will be provided and used for the evaluation.
+Please specify if your code will use a GPU or not for the evaluation of your model. If you specify `true` for the GPU, a **NVIDIA Tesla K80 GPU** will be provided and used for the evaluation.
 
 ### Dataset location
 
-You **don't** need to upload the data set in submission and it will be provided in online submissions at `MINERL_DATA_ROOT` path. For local training and evaluations, you can download it once in your system via `./utility/verify_or_download_data.sh` or place manually into `data/` folder.
+You **don't** need to upload the data set in submission and it will be provided in online submissions at `MINERL_DATA_ROOT` path. For local training and evaluations, you can download it once in your system via `python /utility/verify_or_download_data.py` or place manually into `data/` folder.
 
 
 ## Training and Testing Code Entrypoint (where you write your code!)
