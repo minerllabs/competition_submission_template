@@ -104,8 +104,18 @@ class Parser:
             if self.totalInstances > 0 and not instance_running:
                 self.payload['state'] = 'FINISHED'
             self.payload['instances'] = self.current_state
+
+            score = 0.0
+            instances = 0
+            for state in self.current_state:
+                episodes = self.current_state[state]['episodes']
+                for episode in episodes:
+                    score += episode['rewards']
+                    instances += 1
+            if instances > 0:
+                score = str(round(score/instances, 2))
             self.payload['score'] = {
-                'score': sum(self.current_state[x]['score']['score'] for x in self.current_state),
+                'score': score,
                 'score_secondary': sum(self.current_state[x]['score']['score_secondary'] for x in self.current_state)
             }
 
@@ -219,6 +229,9 @@ class Parser:
                 payload['episodes'].append(episode_info)
             else:
                 break
+
+        if len(payload['episodes']) > 0:
+            score = str(round(score/len(payload['episodes']), 2))
 
         payload['score'] = {
             "score": score,
