@@ -7,6 +7,12 @@ else
     source utility/environ.sh
 fi
 
+if ! [ -x "$(command -v aicrowd-repo2docker)" ]; then
+  echo 'Error: aicrowd-repo2docker is not installed.' >&2
+  echo 'Please install it using requirements.txt or pip -U install aicrowd-repo2docker' >&2
+  exit 1
+fi
+
 # Expected Env variables : in environ.sh
 
 REPO2DOCKER="$(which aicrowd-repo2docker)"
