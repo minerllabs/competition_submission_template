@@ -48,24 +48,15 @@ def main():
     # Sample code for illustration, add your training code below
     env = gym.make(MINERL_GYM_ENV)
 
-    actions = [env.action_space.sample() for _ in range(10)] # Just doing 10 samples in this example
-    xposes = []
-    for _ in range(1):
-        obs = env.reset()
-        done = False
-        netr = 0
+#     actions = [env.action_space.sample() for _ in range(10)] # Just doing 10 samples in this example
+#     xposes = []
+#     for _ in range(1):
+#         obs = env.reset()
+#         done = False
+#         netr = 0
 
-        # Limiting our code to 1024 steps in this example, you can do "while not done" to run till end
-        for i in range(1024):
-            random_act = env.action_space.noop()
-            random_act['camera'] = [0, 0.2]
-            random_act['back'] = 0
-            random_act['forward'] = 1
-            random_act['jump'] = 1
-            random_act['attack'] = 1
-            obs, reward, done, info = env.step(random_act)
-            netr += reward
-            env.render()
+#         # Limiting our code to 1024 steps in this example, you can do "while not done" to run till end
+#         while not done:
 
             # To get better view in your training phase, it is suggested
             # to register progress continuously, example when 54% completed
