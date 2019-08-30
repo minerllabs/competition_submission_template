@@ -7,6 +7,7 @@ import os
 
 import aicrowd_helper
 import gym
+import minerl
 
 import coloredlogs
 coloredlogs.install(logging.DEBUG)
