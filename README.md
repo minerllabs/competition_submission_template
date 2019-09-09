@@ -129,9 +129,8 @@ The different files and directories have following meaning:
 ├── apt.txt                # Packages to be installed inside docker image
 ├── data                   # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
 ├── requirements.txt       # Python packages to be installed
-├── run.sh                 # The default entry point which will execute your submission
-├── test.py                # IMPORTANT: Your testing/inference phase code
-├── train                  # Your trained model MUST be saved inside this directory
+├── test.py                # IMPORTANT: Your testing/inference phase code, must include main() method
+├── train                  # Your trained model MUST be saved inside this directory, must include main() method
 ├── train.py               # IMPORTANT: Your training phase code
 └── utility                # The utility scripts to provide smoother experience to you.
     ├── debug_build.sh
