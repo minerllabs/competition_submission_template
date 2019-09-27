@@ -37,7 +37,7 @@ In this round you will train your agents locally with a limited number of sample
 
 3. **Train** your models against `MineRLObtainDiamond-v0` using the `train_locally.sh` or on Azure  with **only 8,000,000 samples** in less than **four days** using hardware **no powerful than a NG6v2 instance** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a single NVIDIA P100 GPU.) 
 
-3. [**Submit**]() your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)]().  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
+3. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)]().  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
 Once Round 1 is complete, the organizers will:
 
