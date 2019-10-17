@@ -1,6 +1,7 @@
 data/
 shared/
 logs/
+.gradle/
 *.pyc
 
 # Byte-compiled / optimized / DLL files
