@@ -72,7 +72,7 @@ def main():
     # Save trained model to train/ directory
     # Training 100% Completed
     aicrowd_helper.register_progress(1)
-    env.close()
+    #env.close()
 
 
 if __name__ == "__main__":
