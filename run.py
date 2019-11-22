@@ -10,7 +10,6 @@ EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
 # Training Phase
 if EVALUATION_STAGE in ['all', 'training']:
     aicrowd_helper.training_start()
-    train.main()
     try:
         train.main()
         aicrowd_helper.training_end()
