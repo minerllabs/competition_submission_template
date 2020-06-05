@@ -1,0 +1,4 @@
+[submodule "baselines"]
+	path = baselines
+	url = git@github.com:minerllabs/baselines.git
+	branch = master
