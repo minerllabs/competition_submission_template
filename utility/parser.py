@@ -205,7 +205,7 @@ class Parser:
 
     def read_instance_information(self, instance_id, instance_directory):
         status_file = instance_directory + '/status.json'
-        # {'totalNumberSteps': 18012, 'totalNumberEpisodes': 3, 'currentEnvironment': 'MineRLObtainDiamond-v0'}
+        # {'totalNumberSteps': 18012, 'totalNumberEpisodes': 3, 'currentEnvironment': 'MineRLObtainDiamondVectorObf-v0'}
         payload, found = self.read_json_file(status_file)
         payload['state'] = 'PENDING'
         payload['episodes'] = []
@@ -215,7 +215,7 @@ class Parser:
             self.check_for_allowed_environment(payload['currentEnvironment'], payload)
 
         for episode in range(payload.get('totalNumberEpisodes', -1) + 1):
-            # 000000-MineRLObtainDiamond-v0.json
+            # 000000-MineRLObtainDiamondVectorObf-v0.json
             episode_file = instance_directory + '/' + str(episode).zfill(6) + '-' + payload['currentEnvironment'] + '.json'
             episode_info, found = self.read_json_file(episode_file)
             if found:
@@ -259,7 +259,7 @@ MAX_ALLOWED_INSTANCES = int(os.getenv('MAX_ALLOWED_INSTANCES', 1))
 # Maximum number of steps
 MAX_ALLOWED_STEPS = int(os.getenv('MAX_ALLOWED_STEPS', 0)) or None
 # All the evaluations will be allowed to run only below gym environment
-MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamond-v0')
+MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamondVectorObf-v0')
 
 # Where to look if submission has finished
 EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
