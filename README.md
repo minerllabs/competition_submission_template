@@ -148,6 +148,7 @@ The `aicrowd.json` of each submission should contain the following content:
   "challenge_id": "aicrowd-neurips-2020-minerl-challenge",
   "grader_id": "aicrowd-neurips-2020-minerl-challenge",
   "authors": ["your-aicrowd-username"],
+  "tags": ["change-me"],
   "description": "sample description about your awesome agent",
   "license": "MIT",
   "gpu": true
@@ -157,6 +158,8 @@ The `aicrowd.json` of each submission should contain the following content:
 This JSON is used to map your submission to the said challenge, so please remember to use the correct `challenge_id` and `grader_id` as specified above.
 
 Please specify if your code will use a GPU or not for the evaluation of your model. If you specify `true` for the GPU, a **NVIDIA Tesla K80 GPU** will be provided and used for the evaluation.
+
+**Remember: You need to specify "tags" in aicrowd.json, which need to be one of `"RL"`, `"IL"`, `["RL", "IL"]`.**
 
 ### Dataset location
 
