@@ -1,7 +1,8 @@
 {
-  "challenge_id": "aicrowd-neurips-2019-minerl-challenge",
-  "grader_id": "aicrowd-neurips-2019-minerl-challenge",
+  "challenge_id": "aicrowd-neurips-2020-minerl-challenge",
+  "grader_id": "aicrowd-neurips-2020-minerl-challenge",
   "authors": ["aicrowd-bot"],
+  "tags": "change-me",
   "description": "Test Model for MineRL Challenge",
   "gpu": false
 }

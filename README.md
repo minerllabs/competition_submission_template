@@ -1,10 +1,10 @@
-# NeurIPS 2019: MineRL Competition Starter Kit
+# NeurIPS 2020: MineRL Competition Starter Kit
 
 [![Discourse status](https://img.shields.io/discourse/https/discourse.aicrowd.com/status.svg)](https://discourse.aicrowd.com/) [![Discord](https://img.shields.io/discord/565639094860775436.svg)](https://discord.gg/BT9uegr)
 
 
 
-This repository is the main MineRL Competition **submission template and starter kit**! Compete to solve `MineRLObtainDiamond-v0` now!
+This repository is the main MineRL Competition **submission template and starter kit**! Compete to solve `MineRLObtainDiamondVectorObf-v0` now!
 
 **This repository contains**:
 *  **Documentation** on how to submit your agent to the leaderboard
@@ -12,7 +12,7 @@ This repository is the main MineRL Competition **submission template and starter
 *  **Starter code** for you to base your submission!
 
 **Other Resources**:
-- [MineRL Competition Page](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition) - Main registration page & leaderboard.
+- [MineRL Competition Page](https://www.aicrowd.com/challenges/neurips-2020-minerl-competition) - Main registration page & leaderboard.
 - [MineRL Documentation](http://minerl.io/docs) - Documentation for the `minerl` package and dataset!
 - [Example Baselines](https://github.com/minerllabs/baselines) - A set of competition and non-competition baselines for `minerl`.
 
@@ -23,7 +23,7 @@ This repository is the main MineRL Competition **submission template and starter
 
 #  Competition Procedure: Round 1
 
-Welcome to Round 1! The main task of the competition is solving the `MineRLObtainDiamond-v0` environment. In this environment, the agent begins in a random starting location without any items, and is tasked with obtaining a diamond. This task can only be accomplished by navigating the complex item hierarchy of Minecraft.
+Welcome to Round 1! The main task of the competition is solving the `MineRLObtainDiamondVectorObf-v0` environment. In this environment, the agent begins in a random starting location without any items, and is tasked with obtaining a diamond. This task can only be accomplished by navigating the complex item hierarchy of Minecraft.
 
 In this round you will train your agents locally with a limited number of samples and then upload them to AIcrowd (via git) to be evaluated and retrained by the organizers! 
 
@@ -32,19 +32,16 @@ In this round you will train your agents locally with a limited number of sample
 ![](http://minerl.io/assets/images/round1_procedure.png)
 
 
-1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2019-minerl-competition)
+1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2020-minerl-competition)
 2. **Clone** this repo  and start developing your submissions.
-
-3. **Train** your models against `MineRLObtainDiamond-v0` using the `train_locally.sh` or on Azure  with **only 8,000,000 samples** in less than **four days** using hardware **no powerful than a NG6v2 instance** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a single NVIDIA P100 GPU.) 
-
-3. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [full instructions below](#how-to-submit-a-model).  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
+3. **Train** your models against `MineRLObtainDiamondVectorObf-v0` using the `train_locally.sh` or on Azure  with **only 8,000,000 samples** in less than **four days** using hardware **no powerful than a NG6v2 instance** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a single NVIDIA P100 GPU - to be confirmed)
+4. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model).  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
 Once Round 1 is complete, the organizers will:
 
 1. **Examine** the code repositories of the top submissions on the leaderboard to ensure compliance with the competition rules.
 2. **Retrain** the top submissions from scratch to ensure reproducibility of the leaderboard score!  **NOTE: Make sure that you train your models in UNDER 8,000,000 samples using a similar (or worse) hardware spec than above** so that you are **not disqualified** for a score mismatch!
-
-2. **Evaluate** the resulting models again over several hundred episodes to determine the final ranking.
+3. **Evaluate** the resulting models again over several hundred episodes to determine the final ranking.
 
 The code repositories associated with the corresponding submissions will be forked and scrubbed of any files larger than 15MB to ensure that participants are not using any pre-trained models in the subsequent round.  
 
@@ -89,7 +86,7 @@ The code repositories associated with the corresponding submissions will be fork
     * **Pip Packages** If you are using specific Python packages **make sure to add them to** `requirements.txt`! Here's an example:
       ```
       # requirements.txt
-      minerl>0.2.3
+      minerl>=0.3.5
       
       matplotlib
       tensorflow
@@ -148,9 +145,10 @@ The `aicrowd.json` of each submission should contain the following content:
 
 ```json
 {
-  "challenge_id": "aicrowd-neurips-2019-minerl-challenge",
-  "grader_id": "aicrowd-neurips-2019-minerl-challenge",
+  "challenge_id": "aicrowd-neurips-2020-minerl-challenge",
+  "grader_id": "aicrowd-neurips-2020-minerl-challenge",
   "authors": ["your-aicrowd-username"],
+  "tags": ["change-me"],
   "description": "sample description about your awesome agent",
   "license": "MIT",
   "gpu": true
@@ -160,6 +158,8 @@ The `aicrowd.json` of each submission should contain the following content:
 This JSON is used to map your submission to the said challenge, so please remember to use the correct `challenge_id` and `grader_id` as specified above.
 
 Please specify if your code will use a GPU or not for the evaluation of your model. If you specify `true` for the GPU, a **NVIDIA Tesla K80 GPU** will be provided and used for the evaluation.
+
+**Remember: You need to specify "tags" in aicrowd.json, which need to be one of `"RL"`, `"IL"`, `["RL", "IL"]`.**
 
 ### Dataset location
 
@@ -262,12 +262,12 @@ For local evaluation of your code, you can use `./utility/evaluation_locally.sh`
 
 ```
 aicrowd_minerl_starter_kit❯ ./utility/evaluation_locally.sh
-{'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 1001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 1001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
-{'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 2001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 2001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
-{'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 3001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 3001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
-{'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 4001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 4001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
-{'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 5001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 5001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
-{'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 6001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 6001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
+{'state': 'RUNNING', 'score': {'score': '0.0', 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 1001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamondVectorObf-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 1001, 'environment': 'MineRLObtainDiamondVectorObf-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': '0.0', 'score_secondary': 0.0}}}}
+{'state': 'RUNNING', 'score': {'score': '0.0', 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 2001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamondVectorObf-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 2001, 'environment': 'MineRLObtainDiamondVectorObf-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': '0.0', 'score_secondary': 0.0}}}}
+{'state': 'RUNNING', 'score': {'score': '0.0', 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 3001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamondVectorObf-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 3001, 'environment': 'MineRLObtainDiamondVectorObf-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': '0.0', 'score_secondary': 0.0}}}}
+{'state': 'RUNNING', 'score': {'score': '0.0', 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 4001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamondVectorObf-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 4001, 'environment': 'MineRLObtainDiamondVectorObf-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': '0.0', 'score_secondary': 0.0}}}}
+{'state': 'RUNNING', 'score': {'score': '0.0', 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 5001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamondVectorObf-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 5001, 'environment': 'MineRLObtainDiamondVectorObf-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': '0.0', 'score_secondary': 0.0}}}}
+{'state': 'RUNNING', 'score': {'score': '0.0', 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 6001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamondVectorObf-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 6001, 'environment': 'MineRLObtainDiamondVectorObf-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': '0.0', 'score_secondary': 0.0}}}}
 ...
 ```
 
