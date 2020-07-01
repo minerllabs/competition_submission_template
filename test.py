@@ -8,7 +8,6 @@ import threading
 
 from typing import Callable
 
-import aicrowd_helper
 import gym
 import minerl
 import abc
@@ -23,9 +22,7 @@ MINERL_MAX_EVALUATION_EPISODES = int(os.getenv('MINERL_MAX_EVALUATION_EPISODES',
 
 # Parallel testing/inference, **you can override** below value based on compute
 # requirements, etc to save OOM in this phase.
-EVALUATION_THREAD_COUNT = os.getenv('EPISODES_EVALUATION_THREAD_COUNT', 4)
-EVALUATION_EPISODES_PROCESSED = 0
-EVALUATION_EPISODES_PROCESSED_LOCK = threading.Lock()
+EVALUATION_THREAD_COUNT = os.getenv('EPISODES_EVALUATION_THREAD_COUNT', 2)
 
 class EpisodeDone(Exception):
     pass
@@ -37,19 +34,19 @@ class Episode(gym.Env):
         self.env = env
         self.action_space = env.action_space
         self.observation_space = env.observation_space
-        self._done = True
+        self._done = False
 
     def reset(self):
         if not self._done:
             return self.env.reset()
 
     def step(self, action):
-        r,s,d,i = self.env.step(action)
+        s,r,d,i = self.env.step(action)
         if d:
             self._done = True
             raise EpisodeDone()
         else:
-            return r,s,d,i
+            return s,r,d,i
 
 
 
@@ -115,12 +112,12 @@ class MineRLMatrixAgent(MineRLAgentBase):
         This is where you could load a neural network.
         """
         # Some helpful constants from the environment.
-        flat_video_obs_size = 64*64
+        flat_video_obs_size = 64*64*3
         obs_size = 64
         ac_size = 64
         self.matrix = np.random.random(size=(ac_size, flat_video_obs_size + obs_size))*2 -1
-        self.flatten_obs = lambda obs: np.concatenate(obs['pov'].flatten()/255.0, obs['vector'].flatten())
-        self.act = lambda flat_obs: np.clip(self.matrix.dot(flat_obs), -1,1)
+        self.flatten_obs = lambda obs: np.concatenate([obs['pov'].flatten()/255.0, obs['vector'].flatten()])
+        self.act = lambda flat_obs: {'vector': np.clip(self.matrix.dot(flat_obs), -1,1)}
 
 
     def run_agent_on_episode(self, single_episode_env : Episode):
@@ -132,7 +129,7 @@ class MineRLMatrixAgent(MineRLAgentBase):
         obs = single_episode_env.reset()
         done = False
         while not done:
-            _,obs,done,_ = single_episode_env.step(self.act(self.flatten_obs(obs)))
+            obs,reward,done,_ = single_episode_env.step(self.act(self.flatten_obs(obs)))
 
 
 class MineRLRandomAgent(MineRLAgentBase):
@@ -145,12 +142,12 @@ class MineRLRandomAgent(MineRLAgentBase):
         done = False
         while not done:
             random_act = single_episode_env.action_space.sample()
-            single_episode_env.step()
+            single_episode_env.step(random_act)
         
 #####################################################################
 # IMPORTANT: SET THIS VARIABLE WITH THE AGENT CLASS YOU ARE USING   # 
 ######################################################################
-AGENT_TO_TEST = None # MineRLMatrixAgent, MineRLRandomAgent, YourAgentHere
+AGENT_TO_TEST = MineRLMatrixAgent # MineRLMatrixAgent, MineRLRandomAgent, YourAgentHere
 
 
 
@@ -162,14 +159,17 @@ def main():
     assert isinstance(agent, MineRLAgentBase)
     agent.load_agent()
 
+    assert MINERL_MAX_EVALUATION_EPISODES > 0
+    assert EVALUATION_THREAD_COUNT > 0
+
     # Create the parallel envs (sequentially to prevent issues!)
     envs = [gym.make(MINERL_GYM_ENV) for _ in range(EVALUATION_THREAD_COUNT)]
-    episodes_per_thread = MINERL_MAX_EVALUATION_EPISODES // EVALUATION_THREAD_COUNT
-
+    episodes_per_thread = [MINERL_MAX_EVALUATION_EPISODES // EVALUATION_THREAD_COUNT for _ in range(EVALUATION_THREAD_COUNT)]
+    episodes_per_thread[-1] += MINERL_MAX_EVALUATION_EPISODES - EVALUATION_THREAD_COUNT *(MINERL_MAX_EVALUATION_EPISODES // EVALUATION_THREAD_COUNT)
     # A simple funciton to evaluate on episodes!
     def evaluate(i, env):
         print("[{}] Starting evaluator.".format(i))
-        for i in range(episodes_per_thread):
+        for i in range(episodes_per_thread[i]):
             try:
                 agent.run_agent_on_episode(Episode(env))
             except EpisodeDone:
