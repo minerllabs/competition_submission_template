@@ -35,7 +35,7 @@ In this round you will train your agents locally with a limited number of sample
 1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2020-minerl-competition)
 2. **Clone** this repo  and start developing your submissions.
 3. **Train** your models against `MineRLObtainDiamondVectorObf-v0` using the `train_locally.sh` or on Azure  with **only 8,000,000 samples** in less than **four days** using hardware **no powerful than a NG6v2 instance** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a single NVIDIA P100 GPU - to be confirmed)
-4. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)]().  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
+4. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model).  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
 Once Round 1 is complete, the organizers will:
 
