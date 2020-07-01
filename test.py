@@ -6,8 +6,10 @@ import logging
 import os
 import threading
 
+
 from typing import Callable
 
+import aicrowd_helper
 import gym
 import minerl
 import abc
