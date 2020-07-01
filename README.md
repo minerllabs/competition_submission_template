@@ -86,7 +86,7 @@ The code repositories associated with the corresponding submissions will be fork
     * **Pip Packages** If you are using specific Python packages **make sure to add them to** `requirements.txt`! Here's an example:
       ```
       # requirements.txt
-      minerl>=0.3.4
+      minerl>=0.3.5
       
       matplotlib
       tensorflow
