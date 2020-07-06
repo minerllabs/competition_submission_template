@@ -14,7 +14,7 @@ import coloredlogs
 coloredlogs.install(logging.DEBUG)
 
 # All the evaluations will be evaluated on MineRLObtainDiamond-v0 environment
-MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamond-v0')
+MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamondVectorObf-v0')
 # You need to ensure that your submission is trained in under MINERL_TRAINING_MAX_STEPS steps
 MINERL_TRAINING_MAX_STEPS = int(os.getenv('MINERL_TRAINING_MAX_STEPS', 8000000))
 # You need to ensure that your submission is trained by launching less than MINERL_TRAINING_MAX_INSTANCES instances
