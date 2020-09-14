@@ -1,6 +1,5 @@
 name: minerl
 channels:
-  - anaconda
   - conda-forge
   - defaults
 dependencies:
