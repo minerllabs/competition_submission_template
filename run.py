@@ -1,6 +1,6 @@
 import aicrowd_helper
-import train
-import test
+import submission_train_code
+import test_framework
 
 import os
 EVALUATION_RUNNING_ON = os.getenv('EVALUATION_RUNNING_ON', None)
@@ -11,7 +11,7 @@ EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
 if EVALUATION_STAGE in ['all', 'training']:
     aicrowd_helper.training_start()
     try:
-        train.main()
+        submission_train_code.main()
         aicrowd_helper.training_end()
     except Exception as e:
         aicrowd_helper.training_error()
@@ -27,7 +27,7 @@ if EVALUATION_STAGE in ['all', 'testing']:
             pass
     aicrowd_helper.inference_start()
     try:
-        test.main()
+        test_framework.main()
         aicrowd_helper.inference_end()
     except Exception as e:
         aicrowd_helper.inference_error()

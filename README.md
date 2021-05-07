@@ -27,7 +27,7 @@ You need to make different submissions for the two tracks. To choose the track f
 * **Intro** track uses `MineRLObtainDiamond-v0` environment, which provides original observation and action spaces of the environment. In this track
 you are free to use any means to reach the diamond, e.g. script the agent (see the baseline solutions), or train the agent or use both! *Intro* track
 only has one round (Round 1). **No training happens on the AICrowd evaluator side**, you only need to worry about the `test.py` file.
-* **Research** track uses `MineRLObtainDiamondVecObf-v0` environment, in which both observation and action spaces are obfuscated to prevent
+* **Research** track uses `MineRLObtainDiamondVectorObf-v0` environment, in which both observation and action spaces are obfuscated to prevent
 manually coding actions (this is also prohibited by the rules). The amount of training is also restricted to 8M samples and four days (see rules). **Research** track has two rounds (Round 1 and 2).
 
 #  Competition Procedure: Round 1
@@ -153,7 +153,7 @@ This JSON is used to map your submission to the said challenge, so please rememb
 
 Please specify if your code will use a GPU or not for the evaluation of your model. If you specify `true` for the GPU, a **NVIDIA Tesla K80 GPU** will be provided and used for the evaluation.
 
-**Remember: You need to specify "tags" in aicrowd.json, which need to be either `["Intro"]` or `["Research"]`.** This defines the track for which you are submitting.
+**Remember: You need to specify "tags" in aicrowd.json, which need to be either `"intro"` or `"research"`.** This defines the track for which you are submitting.
 
 ### Dataset location
 

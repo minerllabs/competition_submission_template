@@ -1,6 +1,6 @@
 {
-  "challenge_id": "aicrowd-neurips-2020-minerl-challenge",
-  "grader_id": "aicrowd-neurips-2020-minerl-challenge",
+  "challenge_id": "aicrowd-neurips-2021-minerl-challenge",
+  "grader_id": "aicrowd-neurips-2021-minerl-challenge",
   "authors": ["aicrowd-bot"],
   "tags": "change-me",
   "description": "Test Model for MineRL Challenge",
