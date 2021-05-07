@@ -28,14 +28,17 @@ MINERL_DATA_ROOT = os.getenv('MINERL_DATA_ROOT', 'data/')
 
 # Optional: You can view best effort status of your instances with the help of parser.py
 # This will give you current state like number of steps completed, instances launched and so on. Make your you keep a tap on the numbers to avoid breaching any limits.
-parser = Parser('performance/',
-                allowed_environment=MINERL_GYM_ENV,
-                maximum_instances=MINERL_TRAINING_MAX_INSTANCES,
-                maximum_steps=MINERL_TRAINING_MAX_STEPS,
-                raise_on_error=False,
-                no_entry_poll_timeout=600,
-                submission_timeout=MINERL_TRAINING_TIMEOUT*60,
-                initial_poll_timeout=600)
+parser = Parser(
+    'performance/',
+    allowed_environment=MINERL_GYM_ENV,
+    maximum_instances=MINERL_TRAINING_MAX_INSTANCES,
+    maximum_steps=MINERL_TRAINING_MAX_STEPS,
+    raise_on_error=False,
+    no_entry_poll_timeout=600,
+    submission_timeout=MINERL_TRAINING_TIMEOUT*60,
+    initial_poll_timeout=600
+)
+
 
 def main():
     """

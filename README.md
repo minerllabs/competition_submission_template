@@ -1,43 +1,52 @@
-# NeurIPS 2020: MineRL Competition Starter Kit
+# NeurIPS 2021: MineRL Competition Starter Kit
 
-[![Discourse status](https://img.shields.io/discourse/https/discourse.aicrowd.com/status.svg)](https://discourse.aicrowd.com/) [![Discord](https://img.shields.io/discord/565639094860775436.svg)](https://discord.gg/BT9uegr)
+[![Discord](https://img.shields.io/discord/565639094860775436.svg)](https://discord.gg/BT9uegr)
 
 
-
-This repository is the main MineRL Competition **submission template and starter kit**! Compete to solve `MineRLObtainDiamondVectorObf-v0` now!
+This repository is the main MineRL 2021 Competition **submission template and starter kit**! Compete to solve obtaining diamond now!
 
 **This repository contains**:
 *  **Documentation** on how to submit your agent to the leaderboard
-*  **The procedure** for Round 1 (how long you should train your agent, how we evaluate and re-train your agent, etc.)
+*  **The procedure** for Round 1 and Round 2
 *  **Starter code** for you to base your submission!
 
 **Other Resources**:
-- [MineRL Competition Page](https://www.aicrowd.com/challenges/neurips-2020-minerl-competition) - Main registration page & leaderboard.
+- [MineRL Competition Page](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition) - Main registration page & leaderboard.
 - [MineRL Documentation](http://minerl.io/docs) - Documentation for the `minerl` package and dataset!
 - [Example Baselines](https://github.com/minerllabs/baselines) - A set of competition and non-competition baselines for `minerl`.
 
 
-
 ![](https://i.imgur.com/XB1WORT.gif)
 
+#  Competition overview and tracks
+
+The competition is centered one goal: **obtain diamond in Minecraft** from a random starting location without any items.
+There are two separate tracks with their separate rules and leaderboards. You may participate to both or only one of them.
+You need to make different submissions for the two tracks. To choose the track for a submission, see description of `aicrowd.json` file below. 
+
+* **Intro** track uses `MineRLObtainDiamond-v0` environment, which provides original observation and action spaces of the environment. In this track
+you are free to use any means to reach the diamond, e.g. script the agent (see the baseline solutions), or train the agent or use both! *Intro* track
+only has one round (Round 1). **No training happens on the AICrowd evaluator side**, you only need to worry about the `test.py` file.
+* **Research** track uses `MineRLObtainDiamondVecObf-v0` environment, in which both observation and action spaces are obfuscated to prevent
+manually coding actions (this is also prohibited by the rules). The amount of training is also restricted to 8M samples and four days (see rules). **Research** track has two rounds (Round 1 and 2).
 
 #  Competition Procedure: Round 1
 
-Welcome to Round 1! The main task of the competition is solving the `MineRLObtainDiamondVectorObf-v0` environment. In this environment, the agent begins in a random starting location without any items, and is tasked with obtaining a diamond. This task can only be accomplished by navigating the complex item hierarchy of Minecraft.
-
 In this round you will train your agents locally with a limited number of samples and then upload them to AIcrowd (via git) to be evaluated and retrained by the organizers! 
+
+**TODO how does introtrack work?**
 
 **The following is a high level description of how this round works**
 
 ![](http://minerl.io/assets/images/round1_procedure.png)
 
 
-1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2020-minerl-competition)
+1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition)
 2. **Clone** this repo  and start developing your submissions.
-3. **Train** your models against `MineRLObtainDiamondVectorObf-v0` using the `train_locally.sh` or on Azure  with **only 8,000,000 samples** in less than **four days** using hardware **no powerful than a NG6v2 instance** (6 CPU cores, 112 GiB RAM, 736 GiB SDD, and a single NVIDIA P100 GPU - to be confirmed)
+3. **Train** your models using the `utility/train_locally.sh` script, and make sure the submission package works correctly with `utility/evaluation_locally.py`.
 4. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model).  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
-Once Round 1 is complete, the organizers will:
+Once Round 1 is complete, the organizers will **TODO research track?**:
 
 1. **Examine** the code repositories of the top submissions on the leaderboard to ensure compliance with the competition rules.
 2. **Retrain** the top submissions from scratch to ensure reproducibility of the leaderboard score!  **NOTE: Make sure that you train your models in UNDER 8,000,000 samples using a similar (or worse) hardware spec than above** so that you are **not disqualified** for a score mismatch!
@@ -48,9 +57,9 @@ The code repositories associated with the corresponding submissions will be fork
 
 # How to Submit a Model!
 
+In brief: you define your Python environment using Anaconda environment files, and AICrowd system will build a Docker image and run your code using the docker scripts inside the `utility` directory.
+
 ## Setup
-
-
 
 1.  **Clone the github repository** or press the "Use this Template" button on GitHub!
 
@@ -63,57 +72,43 @@ The code repositories associated with the corresponding submissions will be fork
     # 1. Make sure to install the JDK first
     # -> Go to http://minerl.io/docs/tutorials/getting_started.html
 
-    # 2. Install the `minerl` package and the dependencies for the competition
-    cd competition_submission_starter_template
-    pip3 install -r requirements.txt
+    # 2. Install the `minerl` package and its dependencies.
     ```
 
-3. **Specify** your specific submission dependencies (PyTorch, Tensorflow, kittens, etc.)
+3. **Specify** your specific submission dependencies (PyTorch, Tensorflow, kittens, puppies, etc.)
 
-    * (Optional) **Anaconda Environment**. If you would like to use anaconda to manage your environment, make sure at least version `4.5.11` is required to correctly populate `environment.yml` (By following instructions [here](https://www.anaconda.com/download)). Then:
-        * **Create your new conda environment**
+    * **Anaconda Environment**. To make a submission you need to specify the environment using Anaconda environment files. It is also recommended you recreate the environment on your local machine. Make sure at least version `4.5.11` is required to correctly populate `environment.yml` (By following instructions [here](https://www.anaconda.com/download)). Then:
+       * **Create your new conda environment**
 
             ```sh
-            conda create --name minerl_challenge
-            conda activate minerl_challenge
+            conda env create -f environment.yml 
+            conda activate minerl
             ```
-
       * **Your code specific dependencies**
+        Add your own dependencies to the `environment.yml` file. **Remember to add any additional channels**. PyTorch requires channel `pytorch`, for example.
+        You can also install them locally using
         ```sh
         conda install <your-package>
         ```
 
-    * **Pip Packages** If you are using specific Python packages **make sure to add them to** `requirements.txt`! Here's an example:
-      ```
-      # requirements.txt
-      minerl>=0.3.5
-      
-      matplotlib
-      tensorflow
-      ```
+    * **Pip Packages** If you need pip packages (not on conda), you can add them to the `environment.yml` file (see the currently populated version):
+
     * **Apt Packages** If your training procedure or agent depends on specific Debian (Ubuntu, etc.) packages, add them to `apt.txt`.
 
 
 ## How do I specify my software runtime ?
 
-As mentioned above, **the software runtime is specified in 3 places**: 
-* `environment.yml` -- The _optional_ Anaconda environment specification. 
-    As you add new requirements you can export your `conda` environment to this file!
+As mentioned above, **the software runtime is specified mainly in 2 places**: 
+* `environment.yml` -- The Anaconda environment specification. 
+    If you use a conda environment to run your submission code, you can expert the exact `environment.yml` file with
     ```
     conda env export --no-build > environment.yml
-    ```
-* `requirements.txt` -- The `pip3` packages used by your agent to train. **Note that dependencies specified by `environment.yml` take precedence over `requirements.txt`.** As you add new pip3 packages to your training procedure either manually add them to `requirements.txt` or if your software runtime is simple, perform:
-    ```
-    # Put ALL of the current pip3 packages on your system in the submission
-    pip3 freeze > requirements.txt
-    ```
-
 
 * `apt.txt` -- The Debian packages (via aptitude) used by your training procedure!
 
-
 These files are used to construct both the **local and AICrowd docker containers** in which your agent will train. 
 
+If above are too restrictive for defining your environment, see [this Discourse topic for more information](https://discourse.aicrowd.com/t/how-to-specify-runtime-environment-for-your-submission/2274).
 
 ## What should my code structure be like ?
 
@@ -125,10 +120,9 @@ The different files and directories have following meaning:
 ├── aicrowd.json           # Submission meta information like your username
 ├── apt.txt                # Packages to be installed inside docker image
 ├── data                   # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
-├── requirements.txt       # Python packages to be installed
-├── test.py                # IMPORTANT: Your testing/inference phase code, must include main() method
-├── train                  # Your trained model MUST be saved inside this directory, must include main() method
-├── train.py               # IMPORTANT: Your training phase code
+├── test.py                # IMPORTANT: Your testing/inference phase code, must include main() method (Intro and Research track)
+├── train                  # Your trained model MUST be saved inside this directory
+├── train.py               # IMPORTANT: Your training phase code (Research track)
 └── utility                # The utility scripts to provide smoother experience to you.
     ├── debug_build.sh
     ├── docker_run.sh
@@ -145,8 +139,8 @@ The `aicrowd.json` of each submission should contain the following content:
 
 ```json
 {
-  "challenge_id": "aicrowd-neurips-2020-minerl-challenge",
-  "grader_id": "aicrowd-neurips-2020-minerl-challenge",
+  "challenge_id": "aicrowd-neurips-2021-minerl-challenge",
+  "grader_id": "aicrowd-neurips-2021-minerl-challenge",
   "authors": ["your-aicrowd-username"],
   "tags": ["change-me"],
   "description": "sample description about your awesome agent",
@@ -159,11 +153,11 @@ This JSON is used to map your submission to the said challenge, so please rememb
 
 Please specify if your code will use a GPU or not for the evaluation of your model. If you specify `true` for the GPU, a **NVIDIA Tesla K80 GPU** will be provided and used for the evaluation.
 
-**Remember: You need to specify "tags" in aicrowd.json, which need to be one of `"RL"`, `"IL"`, `["RL", "IL"]`.**
+**Remember: You need to specify "tags" in aicrowd.json, which need to be either `["Intro"]` or `["Research"]`.** This defines the track for which you are submitting.
 
 ### Dataset location
 
-You **don't** need to upload the data set in submission and it will be provided in online submissions at `MINERL_DATA_ROOT` path. For local training and evaluations, you can download it once in your system via `python /utility/verify_or_download_data.py` or place manually into `data/` folder.
+You **don't** need to upload the MineRL dataset in submission and it will be provided in online submissions at `MINERL_DATA_ROOT` path. For local training and evaluations, you can download it once in your system via `python ./utility/verify_or_download_data.py` or place manually into `./data/` folder.
 
 
 ## Training and Testing Code Entrypoint (where you write your code!)
@@ -172,7 +166,9 @@ The evaluator will use `train.py` and `test.py` as the entrypoint for training a
 
 The inline documentation in these files will guide you in interfacing with evaluator properly.
 
-## IMPORTANT: Saving Models during Training!
+## (Research track) IMPORTANT: Saving Models during Training!
+
+**Note: This only applies to the *Research* track**
 
 Before you sbumit make sure that your code does the following.
 
@@ -222,7 +218,9 @@ and if everything works out correctly, then you should be able to see the final 
 
 # Other Concepts
 
-## Time constraints
+## (Research track) Time constraints
+
+**Note: This only applies to the research track**.
 
 ### Round 1
 
@@ -280,31 +278,29 @@ For running/testing your submission in a docker environment (ideantical to onlin
 # Team
 
 The quick-start kit was authored by 
-**[Shivam Khandelwal](https://twitter.com/skbly7)** with help from [William H. Guss](http://wguss.ml)
+[Anssi Kanervisto](https://github.com/Miffyli) and [Shivam Khandelwal](https://twitter.com/skbly7) with help from [William H. Guss](http://wguss.ml)
 
 The competition is organized by the following team:
 
-* [William H. Guss](http://wguss.ml) (Carnegie Mellon University)
-* Mario Ynocente Castro (Preferred Networks)
-* Cayden Codel (Carnegie Mellon University)
-* Katja Hofmann (Microsoft Research)
-* Brandon Houghton (Carnegie Mellon University)
-* Noboru Kuno (Microsoft Research)
-* Crissman Loomis (Preferred Networks)
-* Keisuke Nakata (Preferred Networks)
-* Stephanie Milani (University of Maryland, Baltimore County and Carnegie Mellon University)
+* [William H. Guss]((http://wguss.ml)) (OpenAI and Carnegie Mellon University)
+* Alara Dirik (Boğaziçi University)
+* Byron V. Galbraith (Talla)
+* Brandon Houghton (OpenAI and Carnegie Mellon University)
+* Anssi Kanervisto (University of Eastern Finland)
+* Noboru Sean Kuno (Microsoft Research)
+* Stephanie Milani (Carnegie Mellon University)
 * Sharada Mohanty (AIcrowd)
-* Diego Perez Liebana (Queen Mary University of London)
+* Karolis Ramanauskas
 * Ruslan Salakhutdinov (Carnegie Mellon University)
-* Shinya Shiroshita (Preferred Networks)
+* Rohin Shah (UC Berkeley)
 * Nicholay Topin (Carnegie Mellon University)
-* Avinash Ummadisingu (Preferred Networks)
-* Manuela Veloso (Carnegie Mellon University)
-* Phillip Wang (Carnegie Mellon University)
+* Steven H. Wang (UC Berkeley)
+* Cody Wild (UC Berkeley)
+
 
 
 <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/35/CMU_wordmark_1500px-min.png" width="50%"> 
 
-  <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/34/MSFT_logo_rgb_C-Gray.png" width="20%" style="margin-top:10px">
+<img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/34/MSFT_logo_rgb_C-Gray.png" width="20%" style="margin-top:10px">
 
- <img src="https://raw.githubusercontent.com/AIcrowd/AIcrowd/master/app/assets/images/misc/aicrowd-horizontal.png" width="20%">   <img src="https://d3000t1r8yrm6n.cloudfront.net/images/challenge_partners/image_file/38/PFN_logo.png" width="15%" style="margin-top:10px">
+<img src="https://raw.githubusercontent.com/AIcrowd/AIcrowd/master/app/assets/images/misc/aicrowd-horizontal.png" width="20%"> 
