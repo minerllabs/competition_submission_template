@@ -16,6 +16,9 @@ if [[ " $@ " =~ " --verbose " ]]; then
    EXTRAOUTPUT=""
 fi
 
+export PYRO_SERIALIZERS_ACCEPTED='pickle'
+export PYRO_SERIALIZER='pickle'
+
 # Run local name server
 eval "pyro4-ns $EXTRAOUTPUT &"
 trap "kill -11 $! > /dev/null 2>&1;" EXIT
