@@ -39,12 +39,11 @@ def main():
     assert MINERL_MAX_EVALUATION_EPISODES > 0
     assert EVALUATION_THREAD_COUNT > 0
 
-    # Create the parallel envs (sequentially to prevent issues!).
-    # We need to call reset once to initialize the building process
+    # First call to reset will build/create the environment,
+    # but since MineRL v0.4 this works on Linux
     envs = []
     for _ in range(EVALUATION_THREAD_COUNT):
         env = gym.make(MINERL_GYM_ENV)
-        _ = env.reset()
         envs.append(env)
 
     episodes_per_thread = [MINERL_MAX_EVALUATION_EPISODES // EVALUATION_THREAD_COUNT for _ in range(EVALUATION_THREAD_COUNT)]
