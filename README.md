@@ -117,13 +117,14 @@ The different files and directories have following meaning:
 
 ```
 .
-├── aicrowd.json           # Submission meta information like your username
-├── apt.txt                # Packages to be installed inside docker image
-├── data                   # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
-├── test.py                # IMPORTANT: Your testing/inference phase code, must include main() method (Intro and Research track)
-├── train                  # Your trained model MUST be saved inside this directory
-├── train.py               # IMPORTANT: Your training phase code (Research track)
-└── utility                # The utility scripts to provide smoother experience to you.
+├── aicrowd.json             # Submission meta information like your username
+├── apt.txt                  # Packages to be installed inside docker image
+├── data                     # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
+├── submission_test_code.py  # IMPORTANT: Your testing/inference phase code
+├── train                    # Your trained model MUST be saved inside this directory
+├── submission_train_code.py # IMPORTANT: Your training phase code (Research track)
+├── test_framework.py        # Framework that launches agent evaluation (test code)
+└── utility                  # The utility scripts to provide smoother experience to you.
     ├── debug_build.sh
     ├── docker_run.sh
     ├── environ.sh
