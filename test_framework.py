@@ -7,7 +7,7 @@ import aicrowd_helper
 import gym
 import minerl
 
-from submission_test_code import AGENT_TO_TEST, MineRLAgentBase, Episode, EpisodeDone
+from submission_test_code import MineRLAgent, Episode, EpisodeDone
 
 import coloredlogs
 coloredlogs.install(logging.DEBUG)
@@ -17,8 +17,8 @@ coloredlogs.install(logging.DEBUG)
 aicrowd_json = None
 with open("aicrowd.json") as f:
     aicrowd_json = json.load(f)
-assert aicrowd_json["tag"] in ["research", "intro"], "aicrowd.json 'tag' needs to be one of ['research', 'intro']"
-is_research_track = aicrowd_json["tag"] == "research"
+assert aicrowd_json["tags"] in ["research", "intro"], "aicrowd.json 'tag' needs to be one of ['research', 'intro']"
+is_research_track = aicrowd_json["tags"] == "research"
 
 # All the evaluations will be evaluated on MineRLObtainDiamondVectorObf-v0 or MineRLObtainDiamond-v0 environment
 MINERL_GYM_ENV = "MineRLObtainDiamondVectorObf-v0" if is_research_track else "MineRLObtainDiamond-v0"
@@ -33,8 +33,7 @@ EVALUATION_THREAD_COUNT = int(os.getenv('EPISODES_EVALUATION_THREAD_COUNT', 2))
 ####################
 
 def main():
-    agent = AGENT_TO_TEST()
-    assert isinstance(agent, MineRLAgentBase)
+    agent = MineRLAgent()
     agent.load_agent()
 
     assert MINERL_MAX_EVALUATION_EPISODES > 0
