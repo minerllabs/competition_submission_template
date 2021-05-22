@@ -1,6 +1,8 @@
 #!/bin/bash
 # This script run your submission inside a docker image, this is identical in termrs of 
-# how your code will be executed on AIcrowd platform
+# how your code will be executed on AIcrowd platform, with the exception of some
+# environment variables removed (which do not work outside AICrowd platform)
+
 
 if [ -e environ_secret.sh ]
 then
@@ -28,7 +30,6 @@ if [[ " $@ " =~ " --nvidia " ]]; then
     -v $(PWD)/data:/home/aicrowd/data \
     -v $(PWD)/performance:/home/aicrowd/performance \
     -v $(PWD)/.gradle:/home/aicrowd/.gradle \
-    -e CROWDAI_DEBUG_MODE=True \
     -it ${IMAGE_NAME}:${IMAGE_TAG} \
     /bin/bash -c "echo \"Staring docker training...\"; xvfb-run -a ./utility/train_locally.sh ${ARGS}"
 else
@@ -38,7 +39,6 @@ else
     -v $(PWD)/data:/home/aicrowd/data \
     -v $(PWD)/performance:/home/aicrowd/performance \
     -v $(PWD)/.gradle:/home/aicrowd/.gradle \
-    -e CROWDAI_DEBUG_MODE=True \
     -it ${IMAGE_NAME}:${IMAGE_TAG} \
     /bin/bash -c "echo \"Staring docker training...\"; xvfb-run -a ./utility/train_locally.sh ${ARGS}"
 fi
