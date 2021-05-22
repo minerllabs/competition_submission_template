@@ -1,10 +1,10 @@
-# Simple env test.
 import json
 import select
 import time
 import logging
 import os
 
+import numpy as np
 import aicrowd_helper
 import gym
 import minerl
@@ -17,14 +17,14 @@ coloredlogs.install(logging.DEBUG)
 # This code is only used for "Research" track submissions
 # ------------
 
-# All the evaluations will be evaluated on MineRLObtainDiamondVectorObf-v0 environment
+# All research-tracks evaluations will be ran on the MineRLObtainDiamondVectorObf-v0 environment
 MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamondVectorObf-v0')
 # You need to ensure that your submission is trained in under MINERL_TRAINING_MAX_STEPS steps
 MINERL_TRAINING_MAX_STEPS = int(os.getenv('MINERL_TRAINING_MAX_STEPS', 8000000))
 # You need to ensure that your submission is trained by launching less than MINERL_TRAINING_MAX_INSTANCES instances
 MINERL_TRAINING_MAX_INSTANCES = int(os.getenv('MINERL_TRAINING_MAX_INSTANCES', 5))
 # You need to ensure that your submission is trained within allowed training time.
-# Round 1: Training timeout is 15 minutes
+# Round 1: Training timeout is 5 minutes
 # Round 2: Training timeout is 4 days
 MINERL_TRAINING_TIMEOUT = int(os.getenv('MINERL_TRAINING_TIMEOUT_MINUTES', 4 * 24 * 60))
 # The dataset is available in data/ directory from repository root.
@@ -55,28 +55,32 @@ def main():
     # Sample code for illustration, add your training code below
     env = gym.make(MINERL_GYM_ENV)
 
-#     actions = [env.action_space.sample() for _ in range(10)] # Just doing 10 samples in this example
-#     xposes = []
-#     for _ in range(1):
-#         obs = env.reset()
-#         done = False
-#         netr = 0
+    # For an example, lets just run one episode of MineRL for training
+    obs = env.reset()
+    done = False
+    while not done:
+        obs, reward, done, info = env.step(env.action_space.sample())
+        # Do your training here
 
-#         # Limiting our code to 1024 steps in this example, you can do "while not done" to run till end
-#         while not done:
+        # To get better view in your training phase, it is suggested
+        # to register progress continuously, example when 54% completed
+        # aicrowd_helper.register_progress(0.54)
 
-            # To get better view in your training phase, it is suggested
-            # to register progress continuously, example when 54% completed
-            # aicrowd_helper.register_progress(0.54)
-
-            # To fetch latest information from instance manager, you can run below when you want to know the state
-            #>> parser.update_information()
-            #>> print(parser.payload)
-            # .payload: provide AIcrowd generated json
-            # Example: {'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 2001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 2001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
-            # .current_state: provide indepth state information avaiable as dictionary (key: instance id)
+        # To fetch latest information from instance manager, you can run below when you want to know the state
+        #>> parser.update_information()
+        #>> print(parser.payload)
+        # .payload: provide AIcrowd generated json
+        # Example: {'state': 'RUNNING', 'score': {'score': 0.0, 'score_secondary': 0.0}, 'instances': {'1': {'totalNumberSteps': 2001, 'totalNumberEpisodes': 0, 'currentEnvironment': 'MineRLObtainDiamond-v0', 'state': 'IN_PROGRESS', 'episodes': [{'numTicks': 2001, 'environment': 'MineRLObtainDiamond-v0', 'rewards': 0.0, 'state': 'IN_PROGRESS'}], 'score': {'score': 0.0, 'score_secondary': 0.0}}}}
+        # .current_state: provide indepth state information avaiable as dictionary (key: instance id)
 
     # Save trained model to train/ directory
+    # For a demonstration, we save some dummy data.
+    # NOTE: During Round 1 submission you upload trained agents as part of the git repository.
+    #       The training code is only ran for 5 minutes (i.e. no proper training), so you might
+    #       want to avoid overwriting any existing files here!
+    #       Remember to enable it for Round 2 submission, though!
+    np.save("./train/parameters.npy", np.random.random((10,)))
+
     # Training 100% Completed
     aicrowd_helper.register_progress(1)
     env.close()

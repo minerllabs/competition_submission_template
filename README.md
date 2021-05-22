@@ -22,38 +22,41 @@ This repository is the main MineRL 2021 Competition **submission template and st
 
 The competition is centered one goal: **obtain diamond in Minecraft** from a random starting location without any items.
 There are two separate tracks with their separate rules and leaderboards. You may participate to both or only one of them.
-You need to make different submissions for the two tracks. To choose the track for a submission, see description of `aicrowd.json` file below. 
+You need to make different submissions for the two tracks. To choose the track for a submission, see description of the `aicrowd.json` file below. 
 
 * **Intro** track uses `MineRLObtainDiamond-v0` environment, which provides original observation and action spaces of the environment. In this track
 you are free to use any means to reach the diamond, e.g. script the agent (see the baseline solutions), or train the agent or use both! *Intro* track
-only has one round (Round 1). **No training happens on the AICrowd evaluator side**, you only need to worry about the `test.py` file.
+only has one round (Round 1). **No training happens on the AICrowd evaluator side**, you only need to worry about the `submission_test_code.py` file.
 * **Research** track uses `MineRLObtainDiamondVectorObf-v0` environment, in which both observation and action spaces are obfuscated to prevent
 manually coding actions (this is also prohibited by the rules). The amount of training is also restricted to 8M samples and four days (see rules). **Research** track has two rounds (Round 1 and 2).
 
-#  Competition Procedure: Round 1
+#  Competition Procedure - Intro track
 
-In this round you will train your agents locally with a limited number of samples and then upload them to AIcrowd (via git) to be evaluated and retrained by the organizers! 
+In the intro track you will train your agents locally and upload them to AICrowd (via git) to be evaluated by the organizers.
 
-**TODO how does introtrack work?**
+1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition)
+2. **Clone** this repo and start developing your submissions.
+3. **Update** `aicrowd.json` file (team information, track information, etc. See details below).
+4. **Train** your agents locally, place them under `./train` directory, update `submission_test_code.py` with your agent code and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
+5. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model).  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
-**The following is a high level description of how this round works**
+After Round 1 ends, organizers will inspect the code repositories of the top participants to ensure compliance with the competition rules, after which intro track winners are announced.
 
-![](http://minerl.io/assets/images/round1_procedure.png)
+#  Competition Procedure - Research track
 
+In the Round 1 of research track you will train your agents locally with a limited number of samples and then upload them to AIcrowd (via git) to be evaluated by the organizers.
 
 1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition)
 2. **Clone** this repo  and start developing your submissions.
-3. **Train** your models using the `utility/train_locally.sh` script, and make sure the submission package works correctly with `utility/evaluation_locally.py`.
-4. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model).  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
+3. **Update** `aicrowd.json` file (team information, track information, etc. See details below).
+4. **Train** your models using the `utility/train_locally.sh` script (training code **must** be inside `submission_train_code.py` file), and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
+5. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model). The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
-Once Round 1 is complete, the organizers will **TODO research track?**:
+Note that you **must** submit your training code during Round 1 as well! Organizers use this to verify that your training follows the competition rules.
 
-1. **Examine** the code repositories of the top submissions on the leaderboard to ensure compliance with the competition rules.
-2. **Retrain** the top submissions from scratch to ensure reproducibility of the leaderboard score!  **NOTE: Make sure that you train your models in UNDER 8,000,000 samples using a similar (or worse) hardware spec than above** so that you are **not disqualified** for a score mismatch!
-3. **Evaluate** the resulting models again over several hundred episodes to determine the final ranking.
+Once Round 1 is complete, the organizers will examine the code repositories of the top submissions on the leaderboard to ensure compliance with the competition rules. 
 
-The code repositories associated with the corresponding submissions will be forked and scrubbed of any files larger than 15MB to ensure that participants are not using any pre-trained models in the subsequent round.  
-
+In Round 2 (Research track only), top participants of the Round 1 will be invited to submit their submissions, with the evaluator system this time training the agent on the organizer's server before evaluating this. No pre-trained agents are submitted!
 
 # How to Submit a Model!
 
@@ -103,6 +106,7 @@ As mentioned above, **the software runtime is specified mainly in 2 places**:
     If you use a conda environment to run your submission code, you can expert the exact `environment.yml` file with
     ```
     conda env export --no-build > environment.yml
+    ```
 
 * `apt.txt` -- The Debian packages (via aptitude) used by your training procedure!
 
@@ -122,8 +126,8 @@ The different files and directories have following meaning:
 ├── data                     # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
 ├── submission_test_code.py  # IMPORTANT: Your testing/inference phase code
 ├── train                    # Your trained model MUST be saved inside this directory
-├── submission_train_code.py # IMPORTANT: Your training phase code (Research track)
-├── test_framework.py        # Framework that launches agent evaluation (test code)
+├── submission_train_code.py # IMPORTANT: Your training phase code (only needed for the Research track)
+├── test_framework.py        # Framework that launches agent evaluation (but your code goes to `submission_test_code.py`)
 └── utility                  # The utility scripts to provide smoother experience to you.
     ├── debug_build.sh
     ├── docker_run.sh
@@ -143,7 +147,7 @@ The `aicrowd.json` of each submission should contain the following content:
   "challenge_id": "aicrowd-neurips-2021-minerl-challenge",
   "grader_id": "aicrowd-neurips-2021-minerl-challenge",
   "authors": ["your-aicrowd-username"],
-  "tags": ["change-me"],
+  "tags": "change-me",
   "description": "sample description about your awesome agent",
   "license": "MIT",
   "gpu": true
@@ -161,24 +165,18 @@ Please specify if your code will use a GPU or not for the evaluation of your mod
 You **don't** need to upload the MineRL dataset in submission and it will be provided in online submissions at `MINERL_DATA_ROOT` path. For local training and evaluations, you can download it once in your system via `python ./utility/verify_or_download_data.py` or place manually into `./data/` folder.
 
 
-## Training and Testing Code Entrypoint (where you write your code!)
-
-The evaluator will use `train.py` and `test.py` as the entrypoint for training and testing/inference stage respectively, so please remember to include the files in your submission!
-
-The inline documentation in these files will guide you in interfacing with evaluator properly.
-
 ## (Research track) IMPORTANT: Saving Models during Training!
 
 **Note: This only applies to the *Research* track**
 
-Before you sbumit make sure that your code does the following.
+Before you submit to the Research track, make sure that your code does the following.
 
-* **During training** (`train.py`) **save your models to the `train/` folder.**
-* **During testing** (`test.py`) **load your model from the `train/` folder.**
+* **During training** (`submission_train_code.py`) **save your models to the `train/` folder.**
+* **During testing** (`submission_test_code.py`) **load your model from the `train/` folder.**
 
-It is absolutely imperative **that you save your models during training** (`train.py`) so that they can be used in the evaluation phase (`test.py`) on AICrowd, and so the oraganizers can retrain your models from scratch at the end of Round 1 and during Round 2!
+It is absolutely imperative **that you save your models during training** (`submission_train_code.py`) so that they can be used in the evaluation phase (`submission_test_code.py`) on AICrowd, and so the organizers can verify your training code in Round 1 and train agents during Round 2!
 
-## How to submit a trained agent!
+## How to submit!
 
 To make a submission, you will have to create a private repository on [https://gitlab.aicrowd.com/](https://gitlab.aicrowd.com/).
 
