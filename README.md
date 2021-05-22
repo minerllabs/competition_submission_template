@@ -51,7 +51,7 @@ In the Round 1 of research track you will train your agents locally with a limit
 1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition)
 2. **Clone** this repo  and start developing your submissions.
 3. **Update** `aicrowd.json` file (team information, track information, etc. See details below).
-4. **Train** your models using the `utility/train_locally.sh` script (training code **must** be inside `submission_train_code.py` file), and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
+4. **Train** your models using the `utility/train_locally.sh` script (training code **must** be inside `submission_train_code.py` file), update `submission_test_code.py` code as well and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
 5. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model). The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
 Note that you **must** submit your training code during Round 1 as well! Organizers use this to verify that your training follows the competition rules.
@@ -126,10 +126,10 @@ The different files and directories have following meaning:
 ├── aicrowd.json             # Submission meta information like your username
 ├── apt.txt                  # Packages to be installed inside docker image
 ├── data                     # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
-├── submission_test_code.py  # IMPORTANT: Your testing/inference phase code
+├── submission_test_code.py  # IMPORTANT: Your testing/inference phase code. NOTE: This is NOT the entry point for testing phase!
 ├── train                    # Your trained model MUST be saved inside this directory
 ├── submission_train_code.py # IMPORTANT: Your training phase code (only needed for the Research track)
-├── test_framework.py        # Framework that launches agent evaluation (but your code goes to `submission_test_code.py`)
+├── test_framework.py        # The entry point for testing phase, which sets up the environment. Your code DOES NOT go here.
 └── utility                  # The utility scripts to provide smoother experience to you.
     ├── debug_build.sh
     ├── docker_run.sh
