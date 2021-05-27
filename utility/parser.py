@@ -194,7 +194,7 @@ class Parser:
 
     def check_for_allowed_environment(self, environment, payload):
         if self.allowed_environment is not None:
-            if self.allowed_environment != environment:
+            if not environment in self.allowed_environment:
                 payload['state'] = 'ERROR'
                 payload['reason'] = 'Wrong environment used, you should use "%s" instead of "%s"' \
                                     % (MINERL_GYM_ENV, payload['currentEnvironment'])
@@ -255,11 +255,11 @@ INITIAL_POLL_TIMEOUT = int(os.getenv('INITIAL_POLL_TIMEOUT', 3*60))
 # How many seconds to wait before considering instance manager is dead
 NO_NEW_ENTRY_POLL_TIMEOUT = int(os.getenv('NO_NEW_ENTRY_POLL_TIMEOUT', 180))
 # Maximum number of instances to launch
-MAX_ALLOWED_INSTANCES = int(os.getenv('MAX_ALLOWED_INSTANCES', 1))
+MAX_ALLOWED_INSTANCES = int(os.getenv('MAX_ALLOWED_INSTANCES', 2))
 # Maximum number of steps
 MAX_ALLOWED_STEPS = int(os.getenv('MAX_ALLOWED_STEPS', 0)) or None
 # All the evaluations will be allowed to run only below gym environment
-MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamondVectorObf-v0')
+MINERL_GYM_ENV = os.getenv('MINERL_GYM_ENV', 'MineRLObtainDiamondVectorObf-v0,MineRLObtainDiamond-v0')
 
 # Where to look if submission has finished
 EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
