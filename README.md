@@ -20,14 +20,14 @@ This repository is the main MineRL 2021 Competition **submission template and st
 
 #  Competition overview and tracks
 
-The competition is centered one goal: **obtain diamond in Minecraft** from a random starting location without any items.
-There are two separate tracks with their separate rules and leaderboards. You may participate to both or only one of them.
+The competition is centered around one goal: **obtain diamond in Minecraft** from a random starting location without any items.
+There are two separate tracks with their separate rules and leaderboards. You may participate to the both or only one of them.
 You need to make different submissions for the two tracks. To choose the track for a submission, see description of the `aicrowd.json` file below. 
 
-* **Intro** track uses `MineRLObtainDiamond-v0` environment, which provides original observation and action spaces of the environment. In this track
+* **Intro** track uses the `MineRLObtainDiamond-v0` environment, which provides original observation and action spaces of the environment. In this track
 you are free to use any means to reach the diamond, e.g. script the agent (see the baseline solutions), or train the agent or use both! *Intro* track
 only has one round (Round 1). **No training happens on the AICrowd evaluator side**, you only need to worry about the `test_submission_code.py` file.
-* **Research** track uses `MineRLObtainDiamondVectorObf-v0` environment, in which both observation and action spaces are obfuscated to prevent
+* **Research** track uses the `MineRLObtainDiamondVectorObf-v0` environment, in which both observation and action spaces are obfuscated to prevent
 manually coding actions (this is also prohibited by the rules). The amount of training is also restricted to 8M samples and four days (see rules). **Research** track has two rounds (Round 1 and 2).
 
 #  Competition Procedure - Intro track
@@ -58,7 +58,7 @@ Note that you **must** submit your training code during Round 1 as well! Organiz
 
 Once Round 1 is complete, the organizers will examine the code repositories of the top submissions on the leaderboard to ensure compliance with the competition rules. 
 
-In Round 2 (Research track only), top participants of the Round 1 will be invited to submit their submissions, with the evaluator system this time training the agent on the organizer's server before evaluating this. No pre-trained agents are submitted!
+In Round 2 (Research track only), top participants of Round 1 will be invited to submit their submissions, with the evaluator system this time training the agent on the organizer's server before evaluating this. No pre-trained agents are submitted!
 
 # How to Submit a Model!
 
@@ -126,11 +126,11 @@ The different files and directories have following meaning:
 ├── aicrowd.json             # Submission meta information like your username
 ├── apt.txt                  # Packages to be installed inside docker image
 ├── data                     # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
-├── test_submission_code.py                  # IMPORTANT: Your testing/inference phase code. NOTE: This is NOT the entry point for testing phase!
+├── test_submission_code.py  # IMPORTANT: Your testing/inference phase code. NOTE: This is NOT the the entry point for testing phase!
 ├── train                    # Your trained model MUST be saved inside this directory
-├── train_submission_code.py                 # IMPORTANT: Your training phase code (only needed for the Research track)
-├── test_framework.py        # The entry point for testing phase, which sets up the environment. Your code DOES NOT go here.
-└── utility                  # The utility scripts to provide smoother experience to you.
+├── train_submission_code.py # IMPORTANT: Your training phase code (only needed for the Research track)
+├── test_framework.py        # The entry point for the testing phase, which sets up the environment. Your code DOES NOT go here.
+└── utility                  # The utility scripts which provide a smoother experience to you.
     ├── debug_build.sh
     ├── docker_run.sh
     ├── environ.sh
@@ -225,11 +225,11 @@ and if everything works out correctly, then you should be able to see the final 
 
 ### Round 1
 
-You have to train your models locally **with under 8,000,000 samples** and with **worse or comprable hardware to that above** and upload the trained model in `train/` directory. But, to make sure, your training code is compatible with further round's interface, the training code will be executed in this round as well. The constraints will be timeout of 5 minutes.
+You have to train your models locally **with under 8,000,000 samples** and with **worse or comprable hardware to that above** and upload the trained model in `train/` directory. But, to make sure, your training code is compatible with further round's interface, the training code will be executed in this round as well. The constraints will be a timeout of 5 minutes.
 
 ### Round 2
 
-You are expected to train your model online using the training phase docker container and output the trained model in `train/` directory. You need to ensure that your submission is trained in under 8,000,000 samples and within 4 days period. Otherwise, the container will be killed
+You are expected to train your model online using the training phase docker container and output the trained model in the `train/` directory. You need to ensure that your submission is trained in under 8,000,000 samples and within a 4 day period. Otherwise, the container will be killed
 
 ## Local evaluation
 
@@ -270,7 +270,7 @@ aicrowd_minerl_starter_kit❯ ./utility/evaluation_locally.sh
 ...
 ```
 
-For running/testing your submission in a docker environment (ideantical to online submission), you can use `./utility/docker_train_locally.sh` and `./utility/docker_evaluation_locally.sh`. You can also run docker image with bash entrypoint for debugging on the go with the help of `./utility/docker_run.sh`. These scripts respect following parameters:
+For running/testing your submission in a docker environment (identical to the online submission), you can use `./utility/docker_train_locally.sh` and `./utility/docker_evaluation_locally.sh`. You can also run docker image with bash entrypoint for debugging on the go with the help of `./utility/docker_run.sh`. These scripts respect following parameters:
 
 * `--no-build`: To skip docker image build and use the last build image
 * `--nvidia`: To use `nvidia-docker` instead of `docker` which include your nvidia related drivers inside docker image
