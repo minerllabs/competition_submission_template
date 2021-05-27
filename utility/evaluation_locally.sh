@@ -15,7 +15,9 @@ if [[ " $@ " =~ " --verbose " ]]; then
    EXTRAOUTPUT=""
 fi
 
-
+# Fixes for the new MineRL code
+export PYRO_SERIALIZERS_ACCEPTED='pickle'
+export PYRO_SERIALIZER='pickle'
 
 # Run local name server
 eval "pyro4-ns $EXTRAOUTPUT &"
