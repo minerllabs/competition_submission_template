@@ -207,8 +207,7 @@ git push aicrowd submission-v0.1
 # then pushing a new tag will **not** trigger a new evaluation.
 ```
 
-You now should be able to see the details of your submission at :
-[gitlab.aicrowd.com/<YOUR_AICROWD_USER_NAME>/competition_submission_starter_template/issues](gitlab.aicrowd.com//<YOUR_AICROWD_USER_NAME>/competition_submission_starter_template/issues)
+You now should be able to see the details of your submission at: `https://gitlab.aicrowd.com/<YOUR_AICROWD_USER_NAME>/competition_submission_starter_template/issues/`
 
 **NOTE**: Remember to update your username in the link above :wink:
 
