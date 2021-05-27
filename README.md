@@ -26,7 +26,7 @@ You need to make different submissions for the two tracks. To choose the track f
 
 * **Intro** track uses `MineRLObtainDiamond-v0` environment, which provides original observation and action spaces of the environment. In this track
 you are free to use any means to reach the diamond, e.g. script the agent (see the baseline solutions), or train the agent or use both! *Intro* track
-only has one round (Round 1). **No training happens on the AICrowd evaluator side**, you only need to worry about the `submission_test_code.py` file.
+only has one round (Round 1). **No training happens on the AICrowd evaluator side**, you only need to worry about the `test_submission_code.py` file.
 * **Research** track uses `MineRLObtainDiamondVectorObf-v0` environment, in which both observation and action spaces are obfuscated to prevent
 manually coding actions (this is also prohibited by the rules). The amount of training is also restricted to 8M samples and four days (see rules). **Research** track has two rounds (Round 1 and 2).
 
@@ -37,7 +37,7 @@ In the intro track you will train your agents locally and upload them to AICrowd
 1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition)
 2. **Clone** this repo and start developing your submissions.
 3. **Update** `aicrowd.json` file (team information, track information, etc. See details below).
-4. **Train** your agents locally, place them under `./train` directory, update `submission_test_code.py` with your agent code and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
+4. **Train** your agents locally, place them under `./train` directory, update `test_submission_code.py` with your agent code and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
 5. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model).  The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
 After Round 1 ends, organizers will inspect the code repositories of the top participants to ensure compliance with the competition rules, after which intro track winners are announced.
@@ -51,7 +51,7 @@ In the Round 1 of research track you will train your agents locally with a limit
 1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition)
 2. **Clone** this repo  and start developing your submissions.
 3. **Update** `aicrowd.json` file (team information, track information, etc. See details below).
-4. **Train** your models using the `utility/train_locally.sh` script (training code **must** be inside `submission_train_code.py` file), update `submission_test_code.py` code as well and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
+4. **Train** your models using the `utility/train_locally.sh` script (training code **must** be inside `train_submission_code.py` file), update `test_submission_code.py` code as well and make sure the submission package works correctly with `utility/evaluation_locally.sh`.
 5. [**Submit**](https://github.com/minerllabs/competition_submission_starter_template#how-to-submit-a-model) your trained models to [AIcrowd Gitlab](https://gitlab.aicrowd.com) for evaluation [(full instructions below)](#how-to-submit-a-model). The automated evaluation setup will evaluate the submissions against the validation environment, to compute and report the metrics on the leaderboard of the competition.
 
 Note that you **must** submit your training code during Round 1 as well! Organizers use this to verify that your training follows the competition rules.
@@ -126,9 +126,9 @@ The different files and directories have following meaning:
 ├── aicrowd.json             # Submission meta information like your username
 ├── apt.txt                  # Packages to be installed inside docker image
 ├── data                     # The downloaded data, the path to directory is also available as `MINERL_DATA_ROOT` env variable
-├── submission_test_code.py  # IMPORTANT: Your testing/inference phase code. NOTE: This is NOT the entry point for testing phase!
+├── test_submission_code.py                  # IMPORTANT: Your testing/inference phase code. NOTE: This is NOT the entry point for testing phase!
 ├── train                    # Your trained model MUST be saved inside this directory
-├── submission_train_code.py # IMPORTANT: Your training phase code (only needed for the Research track)
+├── train_submission_code.py                 # IMPORTANT: Your training phase code (only needed for the Research track)
 ├── test_framework.py        # The entry point for testing phase, which sets up the environment. Your code DOES NOT go here.
 └── utility                  # The utility scripts to provide smoother experience to you.
     ├── debug_build.sh
@@ -173,10 +173,10 @@ You **don't** need to upload the MineRL dataset in submission and it will be pro
 
 Before you submit to the Research track, make sure that your code does the following.
 
-* **During training** (`submission_train_code.py`) **save your models to the `train/` folder.**
-* **During testing** (`submission_test_code.py`) **load your model from the `train/` folder.**
+* **During training** (`train_submission_code.py`) **save your models to the `train/` folder.**
+* **During testing** (`test_submission_code.py`) **load your model from the `train/` folder.**
 
-It is absolutely imperative **that you save your models during training** (`submission_train_code.py`) so that they can be used in the evaluation phase (`submission_test_code.py`) on AICrowd, and so the organizers can verify your training code in Round 1 and train agents during Round 2!
+It is absolutely imperative **that you save your models during training** (`train_submission_code.py`) so that they can be used in the evaluation phase (`test_submission_code.py`) on AICrowd, and so the organizers can verify your training code in Round 1 and train agents during Round 2!
 
 ## How to submit!
 

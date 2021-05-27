@@ -1,5 +1,5 @@
 import aicrowd_helper
-import submission_train_code
+import train_submission_code
 import test_framework
 
 import os
@@ -11,7 +11,7 @@ EXITED_SIGNAL_PATH = os.getenv('EXITED_SIGNAL_PATH', 'shared/exited')
 if EVALUATION_STAGE in ['all', 'training']:
     aicrowd_helper.training_start()
     try:
-        submission_train_code.main()
+        train_submission_code.main()
         aicrowd_helper.training_end()
     except Exception as e:
         aicrowd_helper.training_error()

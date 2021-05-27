@@ -7,7 +7,7 @@ import aicrowd_helper
 import gym
 import minerl
 
-from submission_test_code import MineRLAgent, Episode, EpisodeDone
+from test_submission_code import MineRLAgent, Episode, EpisodeDone
 
 import coloredlogs
 coloredlogs.install(logging.DEBUG)
