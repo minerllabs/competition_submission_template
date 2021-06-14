@@ -146,8 +146,7 @@ The `aicrowd.json` of each submission should contain the following content:
 
 ```json
 {
-  "challenge_id": "aicrowd-neurips-2021-minerl-challenge",
-  "grader_id": "aicrowd-neurips-2021-minerl-challenge",
+  "challenge_id": "aicrowd-neurips-2021-minerl-diamond-challenge",
   "authors": ["your-aicrowd-username"],
   "tags": "change-me",
   "description": "sample description about your awesome agent",
