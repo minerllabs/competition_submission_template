@@ -46,8 +46,6 @@ After Round 1 ends, organizers will inspect the code repositories of the top par
 
 In the Round 1 of research track you will train your agents locally with a limited number of samples and then upload them to AIcrowd (via git) to be evaluated by the organizers.
 
-![](http://minerl.io/assets/images/round1_procedure.png)
-
 1. **Sign up** to join the competition [on the AIcrowd website.](https://www.aicrowd.com/challenges/neurips-2021-minerl-competition)
 2. **Clone** this repo  and start developing your submissions.
 3. **Update** `aicrowd.json` file (team information, track information, etc. See details below).
